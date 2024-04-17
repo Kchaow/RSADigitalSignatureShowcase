@@ -14,18 +14,28 @@ public class MillerRabinPrimeTester extends PrimeTester
         int witnessCount = 5;
         BigIntegerCongruentLinearGenerator bigIntegerCongruentLinearGenerator =
                 new BigIntegerCongruentLinearGenerator(number.bitLength()+1);
+
+//        int s = 0;
+//        BigInteger r = BigInteger.ONE;
+          BigInteger numberMinusOne = number.subtract(BigInteger.ONE);
+//        while (!BigInteger.TWO.pow(s).multiply(r).equals(numberMinusOne))
+//        {
+//            s++;
+//            if (BigInteger.TWO.pow(s).multiply(r).compareTo(numberMinusOne) > 0)
+//            {
+//                s = 0;
+//                r = r.add(BigInteger.ONE);
+//            }
+//        }
+
         int s = 0;
-        BigInteger r = BigInteger.ONE;
-        BigInteger numberMinusOne = number.subtract(BigInteger.ONE);
-        while (!BigInteger.TWO.pow(s).multiply(r).equals(numberMinusOne))
+        BigInteger r = number.subtract(BigInteger.ONE);
+        while ((r.and(BigInteger.ONE)).equals(BigInteger.ZERO))
         {
+            r = r.shiftRight(1);
             s++;
-            if (BigInteger.TWO.pow(s).multiply(r).compareTo(numberMinusOne) > 0)
-            {
-                s = 0;
-                r = r.add(BigInteger.ONE);
-            }
         }
+
         for (int i = 0; i < witnessCount; i++)
         {
             List<BigInteger> row = new ArrayList<>();

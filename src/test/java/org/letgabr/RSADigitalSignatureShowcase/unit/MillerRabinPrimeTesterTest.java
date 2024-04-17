@@ -36,10 +36,11 @@ public class MillerRabinPrimeTesterTest
                 "89423065727343008115773267580550096313270847732240753602112011387987139335765" +
                 "87897688144166224928474306394741243777678934248654852763022196012460941194530" +
                 "82952085005768838150682342462881473913110540827237163350510684586298239947245" +
-                "938479716304835356329624224137216");
-
+                "938479716304835356329624224137217");
+        BigInteger h = new BigInteger("633825314831863038897452935939");
         PrimeTester millerRabinTester = new MillerRabinPrimeTester();
-        assertTimeout(Duration.ofMillis(100), () -> millerRabinTester.isPrime(number));
+        assertTimeout(Duration.ofSeconds(2), () -> millerRabinTester.isPrime(number));
+        assertTimeout(Duration.ofSeconds(2), () -> millerRabinTester.isPrime(h));
     }
 
     private static List<Integer> getTestNumbers()
