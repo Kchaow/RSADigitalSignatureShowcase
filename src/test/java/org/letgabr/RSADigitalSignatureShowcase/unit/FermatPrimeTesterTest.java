@@ -1,22 +1,26 @@
 package org.letgabr.RSADigitalSignatureShowcase.unit;
 
 import org.junit.jupiter.api.Test;
+import org.letgabr.RSADigitalSignatureShowcase.util.FermatPrimeTester;
+import org.letgabr.RSADigitalSignatureShowcase.util.MillerRabinPrimeTester;
 import org.letgabr.RSADigitalSignatureShowcase.util.PrimeTester;
 
 import java.math.BigInteger;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
 
-public class PrimeTesterTest
+public class FermatPrimeTesterTest
 {
     @Test
     public void isPrimeByFermat()
     {
-        PrimeTester fermatTester = new PrimeTester("fermat");
+        PrimeTester fermatTester = new FermatPrimeTester();
         List<Integer> testNumbers = getTestNumbers();
         AtomicInteger iter = new AtomicInteger(2);
         List<Boolean> correctAnswers = Stream.generate(() -> (iter.getAndIncrement() % 2 == 0)).limit(testNumbers.size()).toList();
@@ -27,16 +31,16 @@ public class PrimeTesterTest
     }
 
     @Test
-    public void isPrimeByMillerRabin()
+    public void performanceTest()
     {
-        PrimeTester millerRabinTester = new PrimeTester("millerRabin");
-        List<Integer> testNumbers = getTestNumbers();
-        AtomicInteger iter = new AtomicInteger(2);
-        List<Boolean> correctAnswers = Stream.generate(() -> (iter.getAndIncrement() % 2 == 0)).limit(testNumbers.size()).toList();
+        BigInteger number = new BigInteger("179769313486231590772930519078902473361797697" +
+                "89423065727343008115773267580550096313270847732240753602112011387987139335765" +
+                "87897688144166224928474306394741243777678934248654852763022196012460941194530" +
+                "82952085005768838150682342462881473913110540827237163350510684586298239947245" +
+                "938479716304835356329624224137216");
 
-        List<Boolean> answersBigInteger = testNumbers.stream().map(x -> millerRabinTester.isPrime(BigInteger.valueOf(x))).toList();
-
-        assertEquals(correctAnswers, answersBigInteger);
+        PrimeTester millerRabinTester = new FermatPrimeTester();
+        assertTimeout(Duration.ofMillis(100), () -> millerRabinTester.isPrime(number));
     }
 
     private static List<Integer> getTestNumbers()

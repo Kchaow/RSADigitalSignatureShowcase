@@ -1,7 +1,5 @@
 package org.letgabr.RSADigitalSignatureShowcase.util;
 
-import org.springframework.stereotype.Component;
-
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Date;
@@ -15,7 +13,7 @@ public class BigIntegerCongruentLinearGenerator
     public BigIntegerCongruentLinearGenerator(int maxLength)
     {
         m = BigInteger.TWO.pow(maxLength-1).add(BigInteger.ONE);
-        PrimeTester fermatTester = new PrimeTester("fermat");
+        PrimeTester fermatTester = new FermatPrimeTester();
         while (!fermatTester.isPrime(m))
             m = m.add(BigInteger.TWO);
         c = BigInteger.TWO.pow(maxLength / 2);
