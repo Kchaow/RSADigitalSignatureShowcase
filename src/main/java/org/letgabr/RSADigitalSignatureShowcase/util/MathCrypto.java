@@ -18,6 +18,32 @@ public class MathCrypto
         primeNumbers = sieveOfEratosthenes((int) Math.pow(10, 4));
     }
 
+    static public BigInteger getModularMultiplicativeInverse(BigInteger number, BigInteger modulo)
+    {
+        if (number.compareTo(modulo) > 0)
+            throw new RuntimeException("number cannot be equal or greater modulo");
+
+        List<BigInteger> r = new ArrayList<>();
+        r.add(modulo); r.add(number);
+        List<BigInteger> y = new ArrayList<>();
+        y.add(BigInteger.ZERO); y.add(BigInteger.ONE);
+        List<BigInteger> x = new ArrayList<>();
+        x.add(BigInteger.ONE); x.add(BigInteger.ZERO);
+        List<BigInteger> g = new ArrayList<>();
+        int i = 2;
+        do {
+            g.add(r.get(i-2).divide(r.get(i-1)));
+            r.add(r.get(i-2).subtract(g.get(g.size()-1).multiply(r.get(i-1))));
+            y.add(y.get(i-2).subtract(g.get(g.size()-1).multiply(y.get(i-1))));
+            x.add(x.get(i-2).subtract(g.get(g.size()-1).multiply(x.get(i-1))));
+            i++;
+        } while (!r.get(r.size()-1).equals(BigInteger.ZERO));
+        if (r.get(r.size()-2).equals(BigInteger.ONE))
+            return y.get(i-2).mod(modulo);
+        else
+            return null;
+    }
+
     static public BigInteger getPrimeBigInteger(int length)
     {
         PrimeTester primeTester = new MillerRabinPrimeTester();

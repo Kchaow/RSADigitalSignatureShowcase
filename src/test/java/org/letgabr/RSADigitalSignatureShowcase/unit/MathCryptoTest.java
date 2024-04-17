@@ -41,4 +41,18 @@ public class MathCryptoTest
                 () -> assertEquals(fourthValueLength, fourthValue.bitLength())
         );
     }
+
+    @Test
+    public void getModularMultiplicativeInverseTest()
+    {
+        BigInteger firstNumber = BigInteger.valueOf(17); BigInteger firstModulo = BigInteger.valueOf(79);
+        BigInteger secondNumber = BigInteger.valueOf(421); BigInteger secondModule = BigInteger.valueOf(883);
+        BigInteger thirdNumber = BigInteger.valueOf(36); BigInteger thirdModulo = BigInteger.valueOf(136);
+
+        assertAll(
+                () -> assertEquals(BigInteger.valueOf(14), MathCrypto.getModularMultiplicativeInverse(firstNumber, firstModulo)),
+                () -> assertEquals(BigInteger.valueOf(323), MathCrypto.getModularMultiplicativeInverse(secondNumber, secondModule)),
+                () -> assertNull(MathCrypto.getModularMultiplicativeInverse(thirdNumber, thirdModulo))
+        );
+    }
 }
