@@ -55,4 +55,13 @@ public class MathCryptoTest
                 () -> assertNull(MathCrypto.getModularMultiplicativeInverse(thirdNumber, thirdModulo))
         );
     }
+
+    @Test
+    public void gcdTest()
+    {
+        BigInteger a = BigInteger.valueOf(56);
+        BigInteger b = BigInteger.valueOf(35);
+
+        assertEquals(BigInteger.valueOf(7), MathCrypto.gcd(a, b));
+    }
 }

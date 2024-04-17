@@ -6,7 +6,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Slf4j
 public class MathCrypto
@@ -16,6 +15,15 @@ public class MathCrypto
     static
     {
         primeNumbers = sieveOfEratosthenes((int) Math.pow(10, 4));
+    }
+
+    static public BigInteger gcd(BigInteger a, BigInteger b)
+    {
+        if (a.compareTo(b) < 0)
+            throw new RuntimeException("value a cannot be lower value b");
+        if (a.mod(b).equals(BigInteger.ZERO))
+            return b;
+        return gcd(b, a.mod(b));
     }
 
     static public BigInteger getModularMultiplicativeInverse(BigInteger number, BigInteger modulo)
