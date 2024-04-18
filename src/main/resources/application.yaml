@@ -1,0 +1,15 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    address: localhost
+spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+thymeleaf:
+  prefix: classpath:templates/
+  suffix: .html
+  mode: HTML
+  cache: false

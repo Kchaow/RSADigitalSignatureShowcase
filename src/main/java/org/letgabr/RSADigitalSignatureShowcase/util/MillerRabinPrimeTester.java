@@ -1,9 +1,12 @@
 package org.letgabr.RSADigitalSignatureShowcase.util;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class MillerRabinPrimeTester extends PrimeTester
 {
     @Override

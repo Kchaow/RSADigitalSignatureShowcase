@@ -32,6 +32,27 @@ public class RSACryptoSystem
         this.privateKey = d;
     }
 
+    public RSACryptoSystem(BigInteger p, BigInteger q)
+    {
+        PrimeTester primeTester = new MillerRabinPrimeTester();
+        if (!primeTester.isPrime(p) || !primeTester.isPrime(q))
+            throw new RuntimeException("p or q isn't prime");
+        this.p = p;
+        this.q = q;
+        this.n = p.multiply(q);
+        BigInteger euler = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
+        BigIntegerCongruentLinearGenerator bigIntegerCongruentLinearGenerator
+                = new BigIntegerCongruentLinearGenerator(euler.bitLength()+1);
+        BigInteger e = bigIntegerCongruentLinearGenerator
+                .nextBigInteger(BigInteger.valueOf(3), euler);
+        while (!MathCrypto.gcd(euler, e).equals(BigInteger.ONE))
+            e = bigIntegerCongruentLinearGenerator
+                    .nextBigInteger(BigInteger.valueOf(3), euler);
+        BigInteger d = MathCrypto.getModularMultiplicativeInverse(e, euler);
+        this.publicKey = e;
+        this.privateKey = d;
+    }
+
     static public String encode(String text, BigInteger publicKey, BigInteger n)
     {
         List<BigInteger> bigIntegers = text.chars().mapToObj(BigInteger::valueOf).toList();
