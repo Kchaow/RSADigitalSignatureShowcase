@@ -2,37 +2,78 @@ package org.letgabr.RSADigitalSignatureShowcase.integration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redis.testcontainers.RedisContainer;
+import jakarta.servlet.http.Cookie;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAPrimes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.client.MockMvcWebTestClient;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.math.BigInteger;
+import java.util.Objects;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer.sharedHttpSession;
 
 @SpringBootTest
+@Testcontainers
 @AutoConfigureMockMvc
 public class CryptoControllerTest
 {
-    @Autowired
     MockMvc mockMvc;
     @Autowired
     ObjectMapper objectMapper;
+    @Container
+    static RedisContainer redis = new RedisContainer(DockerImageName.parse("redis:6.2.6"));
+
+    @DynamicPropertySource
+    static public void setProperties(DynamicPropertyRegistry registry)
+    {
+        registry.add("redis.host", redis::getHost);
+        registry.add("redis.port", redis::getRedisPort);
+        registry.add("redis.password", () -> "");
+        registry.add("redis.database", () -> "0");
+    }
+
+    @BeforeEach
+    void setup(WebApplicationContext wac) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).apply(sharedHttpSession()).build();
+    }
 
     @Test
     public void getPrimesTest() throws Exception
     {
+
+        MvcResult firstRequest = mockMvc.perform(get("/primes"))
+                .andDo(print())
+                .andExpectAll(jsonPath("$.p").isNotEmpty(), jsonPath("$.q").isNotEmpty())
+                .andReturn();
+
+        RSAPrimes rsaPrimes = objectMapper.readValue(firstRequest.getResponse().getContentAsString(), RSAPrimes.class);
         mockMvc.perform(get("/primes"))
                 .andDo(print())
-                .andExpectAll(jsonPath("$.p").isNotEmpty(), jsonPath("$.q").isNotEmpty());
+                .andExpectAll(jsonPath("$.p").value(rsaPrimes.p()), jsonPath("$.q").value(rsaPrimes.q()));
     }
 
     @Test

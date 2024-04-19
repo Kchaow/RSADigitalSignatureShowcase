@@ -1,19 +1,26 @@
 package org.letgabr.RSADigitalSignatureShowcase.util;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
 public class RSACryptoSystem
 {
-    private final BigInteger privateKey;
-    private final BigInteger publicKey;
-    private final BigInteger n;
-    private final BigInteger q;
-    private final BigInteger p;
+    private BigInteger privateKey;
+    private BigInteger publicKey;
+    private BigInteger n;
+    private BigInteger q;
+    private BigInteger p;
+
     public RSACryptoSystem(int pLength, int qLength)
     {
         this.p = MathCrypto.getPrimeBigInteger(pLength);

@@ -1,8 +1,10 @@
 package org.letgabr.RSADigitalSignatureShowcase.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAKeys;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAPrimes;
+import org.letgabr.RSADigitalSignatureShowcase.service.CryptoSessionService;
 import org.letgabr.RSADigitalSignatureShowcase.util.MathCrypto;
 import org.letgabr.RSADigitalSignatureShowcase.util.PrimeTester;
 import org.letgabr.RSADigitalSignatureShowcase.util.RSACryptoSystem;
@@ -18,18 +20,16 @@ import java.math.BigInteger;
 @RestController
 public class CryptoController
 {
-    final PrimeTester primeTester;
     final int length = 512;
-    public CryptoController(PrimeTester primeTester)
-    {
+    final PrimeTester primeTester;
+    final CryptoSessionService cryptoSessionService;
+    public CryptoController(PrimeTester primeTester, CryptoSessionService cryptoSessionService) {
         this.primeTester = primeTester;
+        this.cryptoSessionService = cryptoSessionService;
     }
     @GetMapping("/primes")
-    public ResponseEntity<RSAPrimes> getPrimes()
-    {
-        BigInteger p = MathCrypto.getPrimeBigInteger(length);
-        BigInteger q = MathCrypto.getPrimeBigInteger(length);
-        return new ResponseEntity<>(new RSAPrimes(p.toString(), q.toString()), HttpStatus.OK);
+    public ResponseEntity<RSAPrimes> getPrimes(HttpServletRequest httpServletRequest) {
+        return new ResponseEntity<>(cryptoSessionService.getPrimes(httpServletRequest), HttpStatus.OK);
     }
 
     @PostMapping("/primes-check")
