@@ -1,21 +1,167 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@5.0.0/bundles/stomp.umd.js"></script>
-    <script th:src="@{script.js}">
-        
-    </script>
-</head>
-<body>
-    <h3 th:text="${sessionId}"></h3>
-    <input type="text" class="idInput"/>
-    <button class="myButton">Button</button>
-    <button class="genButton">RSA</button>
-    <button class="sender">Send</button>
-    <h4>Соединен с:</h4>
-    <p class="connected"></p>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" th:href="@{style.css}">
+        <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@5.0.0/bundles/stomp.umd.js"></script>
+        <script th:src="@{script.js}"></script>
+        <title>RSADigitalSignatureShowcase</title>
+    </head>
+
+    <body>
+        <!-- Интерфейс генерации ключей -->
+        <div class="keysbox">
+            <div class="keysline">
+
+                <div class="buttonbox"> 
+                <button class="keysbutton" name="generatePrime">Сгенерировать простое число</button>
+                </div>
+
+                <div class="keysoutputbox"> 
+                    <div class="keysoutputline">
+                        <b>P:&nbsp&nbsp</b>
+                        <p th:value="${p}" class="p-output"></p>
+                    </div>
+                    <div class="keysoutputline">
+                        <b>q:&nbsp&nbsp</b>
+                        <p th:value="${q}" class="q-output"></p>
+                    </div>
+                </div>
+                <div class="idbox"><b>&nbspID:&nbsp&nbsp</b><div th:text="${sessionId}" class="idoutput">5409</div></div>
+            </div>
+            <div class="keysline">
+
+                <div class="buttonbox"> 
+                    <button class="keysbutton" type="submit" name="checkPrime">"Проверить числа на простоту"</button>
+                </div>
+
+                <div class="keysoutputbox"> 
+                    <div class="keysoutputline">
+                        <b>Тест 1:&nbsp&nbsp</b>
+                        <p class="p-testoutput"></p>
+                    </div>
+                    <div class="keysoutputline">
+                        <b>Тест 2:&nbsp&nbsp</b>
+                        <p class="q-testoutput"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="keysline">
+
+                <div class="buttonbox"> 
+                    <input class="keysbutton" type="submit" name="generateKeys" value="Сгенерировать ключи">
+                </div>
+
+                <div class="keysoutputbox"> 
+                    <div class="column1">
+                        <div class="row">
+                           <b>Открытый ключ:&nbsp&nbsp</b>
+                            <div class="column">
+                                <div class="keysoutputline">
+                                    <b>e:&nbsp&nbsp</b>
+                                    <input class="output" type="text">
+                                </div>
+                                <div class="keysoutputline">
+                                    <b>n:&nbsp&nbsp</b>
+                                    <input class="output" type="text">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <b>Закрытый ключ:&nbsp&nbsp&nbsp</b>
+                            <div class="column">
+                                <div class="keysoutputline">
+                                    <b>e:&nbsp&nbsp</b>
+                                    <input class="output" type="text">
+                                </div>
+                                <div class="keysoutputline">
+                                    <b>d:&nbsp&nbsp</b>
+                                    <input class="output" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+        <!-- Интерфейс соединения -->
+        <div class="connectionbox">
+            <div class="connectioninterfacebox">
+                <div class="rowcon">
+                    <input class="connectionbutton" type="submit" name="StartConnection" value="Отправить запрос на соединение с пользователем">
+                    <input class="outputconn" type="text">
+                    <input class="connectionbutton" type="submit" name="KillConnection" value="Разорвать соединение">
+                </div>
+            </div>
+            <div class="connectioninterfacebox">
+                <div class="rowcon">
+                    <div style="width:40%; display: flex; align-items:center;"><b>&nbsp&nbsp&nbsp&nbsp&nbspОткрытый ключ собеседника:&nbsp&nbsp</b></div>
+                    <div class="column">
+                        <div class="keysoutputline">
+                            <b>e:&nbsp&nbsp</b>
+                            <input class="output" type="text">
+                        </div>
+                        <div class="keysoutputline">
+                            <b>n:&nbsp&nbsp</b>
+                            <input class="output" type="text">
+                        </div>
+                    </div>
+                </div>
+            <div>
+        </div>
+
+
+
+        <!-- Месседжер ебанный -->
+        <div class="messager">
+            <div class="messagerinterface">
+                <div class="messagewindow">
+                    <!-- Сообщение собеседника -->
+                    <div class="usersmessage">
+                        <div class="messagestruct">
+                            <div><b>&nbsp&nbsp&nbsp&nbsp ID: <b></div>
+                            <div class="message">
+                                <div class="content">
+                                    Message
+                                </div>
+                                <div class="operations">
+                                    <input class="messageoperation" type="submit" name="decryptm" value="Расшифровать">
+                                    <input class="messageoperation" type="submit" name="veryficate" value="Проверить подпись">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Сообщение пользователя -->
+                    <div class="yourmessagebox">
+                    <div class="yourmessagestruct">
+                            <div><b>You: &nbsp&nbsp&nbsp&nbsp<b></div>
+                            <div class="yourmessage">
+                                <div class="operations">
+                                    <div class="yourincryptedmessage">
+                                        dfsfs
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    Message
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ZZZZZZZZZZZZZZZZZZZZZZ -->
+                </div>
+                <div class="inputpannel">
+                    <textarea class="inputmessagearea" cols="200" rows="30" name="inputmessage"> </textarea>
+                    <div class="messagebuttons">
+                        <input class="messagebutton" type="submit" name="sign" value="Подписать">
+                        <input class="messagebutton" type="submit" name="encrypt" value="Зашифровать">
+                        <input class="messagebutton" type="submit" name="send" value="Отправить">
+                    </div>
+                </div>
+            <div>
+        </div>
+
+    </body>
+
 </html>

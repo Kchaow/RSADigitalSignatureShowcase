@@ -47,7 +47,7 @@ public class CryptoController
                 .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
     @PostMapping("/primes-check")
-    public ResponseEntity<Object> primeCheck(@RequestBody RSAPrimes rsaPrimes) {
+    public ResponseEntity<RSAPrimes> primeCheck(@RequestBody RSAPrimes rsaPrimes) {
         return new ResponseEntity<>(new RSAPrimes(cryptoSessionService.primeCheck(rsaPrimes.p()) ? "true" : "false",
                 cryptoSessionService.primeCheck(rsaPrimes.q()) ? "true" : "false"),
                 HttpStatus.OK);

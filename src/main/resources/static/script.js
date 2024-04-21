@@ -1,4 +1,4 @@
-window.onload = function () {
+window.onload = async function () {
         let cookies = document.cookie.split(';');
         let sessionId;
         let messageTopic;
@@ -69,22 +69,22 @@ window.onload = function () {
             console.log(message.body);
         }
 
-        let input = document.querySelector('.idInput');
-        let button = document.querySelector('.myButton');
-        button.addEventListener("click", () => {
-            console.log('send');
-            console.log(input.value);
-            let connectionStatus = {
-                "userId": input.value,
-                "status": "connectionRequest"
-            }
-            client.publish({
-                destination: '/app/requestConnection',
-                body: JSON.stringify(connectionStatus)
-            });
-        });
-        let genButton = document.querySelector('.genButton');
-        genButton.addEventListener("click", async () => {
+        // let input = document.querySelector('.idInput');
+        // let button = document.querySelector('.myButton');
+        // button.addEventListener("click", () => {
+        //     console.log('send');
+        //     console.log(input.value);
+        //     let connectionStatus = {
+        //         "userId": input.value,
+        //         "status": "connectionRequest"
+        //     }
+        //     client.publish({
+        //         destination: '/app/requestConnection',
+        //         body: JSON.stringify(connectionStatus)
+        //     });
+        // });
+        let primeGen = document.querySelector(`[name='generatePrime']`);
+        primeGen.addEventListener("click", async () => {
             console.log('generating rsa...')
             let url = `http://localhost:8080/rsa`;
             let response = await fetch(url, {
@@ -92,17 +92,44 @@ window.onload = function () {
             });
             if (response.status == 204) {
                 console.log('rsa generated');
+                
+                url = `http://localhost:8080/primes`;
+                response = await fetch(url);
+                let result = await response.json();
+                document.querySelector('.p-output').textContent = result.p;
+                document.querySelector('.q-output').textContent = result.q;
             } else {
                 console.log('rsa generating failed');
             }
         });
-        let sendButton = document.querySelector('.sender');
-        sendButton.addEventListener("click", () =>{
-            client.publish({
-                destination: messageTopic,
-                body: "testing"
+        // let sendButton = document.querySelector('.sender');
+        // sendButton.addEventListener("click", () =>{
+        //     client.publish({
+        //         destination: messageTopic,
+        //         body: "testing"
+        //     });
+        // });
+
+        let checkPrime = document.querySelector(`[name='checkPrime']`);
+        checkPrime.addEventListener('click', async () => {
+            let p = document.querySelector('.p-output').textContent;
+            let q = document.querySelector('.q-output').textContent;
+            let url = `http://localhost:8080/primes-check`;
+            let rsaPrimes = {
+                "p": p,
+                "q": q
+            };
+            let response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                  },
+                body: JSON.stringify(rsaPrimes)
             });
-        });
+            let result = await response.json();
+            document.querySelector('.p-testoutput').textContent = result.p;
+            document.querySelector('.q-testoutput').textContent = result.q;
+        })
 
         client.activate();
 }
