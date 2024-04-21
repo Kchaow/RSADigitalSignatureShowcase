@@ -13,3 +13,5 @@ thymeleaf:
   suffix: .html
   mode: HTML
   cache: false
+crypto:
+  primeNumberLength: 512
