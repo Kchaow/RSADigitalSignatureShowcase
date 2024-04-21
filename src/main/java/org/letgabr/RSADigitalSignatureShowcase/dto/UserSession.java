@@ -12,6 +12,8 @@ public class UserSession
     @Id
     private String jsessionId;
     private RSACryptoSystem rsaCryptoSystem;
+    private String connectedUserJsessionId;
+    private ConnectionStatus connectionStatus;
 
     public UserSession() {}
     public UserSession(String jsessionId, RSACryptoSystem rsaCryptoSystem)

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAKeys;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAPrimes;
+import org.letgabr.RSADigitalSignatureShowcase.dto.ResponseRequestMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,12 +56,10 @@ public class CryptoControllerTest
         registry.add("redis.database", () -> 0);
         registry.add("crypto.primeNumberLength", () -> 512);
     }
-
     @BeforeEach
     void setup(WebApplicationContext wac) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).apply(sharedHttpSession()).build();
     }
-
     @Test
     public void getPrimesTest() throws Exception {
         mockMvc.perform(post("/rsa"));
@@ -74,14 +73,12 @@ public class CryptoControllerTest
                 .andDo(print())
                 .andExpectAll(jsonPath("$.p").value(rsaPrimes.p()), jsonPath("$.q").value(rsaPrimes.q()));
     }
-
     @Test
     public void getPrimesNotFoundTest() throws Exception {
         mockMvc.perform(get("/primes"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
-
     @Test
     public void primeCheckSuccessTest() throws Exception {
         String p = "17";
@@ -92,7 +89,6 @@ public class CryptoControllerTest
                 .andExpect(jsonPath("$.p").value("true"))
                 .andExpect(jsonPath("$.q").value("false"));
     }
-
     @Test
     public void primeCheckSuccessWithBigNumberTest() throws Exception {
         String p = "6703903964971298549787012499102923063739682910296196688861780721860882015036889280490174470407579092461170659254855642123074390729713186390953696842544691";
@@ -103,7 +99,6 @@ public class CryptoControllerTest
                 .andExpect(jsonPath("$.p").value("true"))
                 .andExpect(jsonPath("$.q").value("false"));
     }
-
     @Test
     public void primeCheckFailureTest() throws Exception {
         String p = "670390396497129854978701249910292306373968291029619668886178072186088201503688928049017447040757909246117065925485564212307439072971318639095369684254469167039039649712985497870124991029230637396829102961966888617807218608820150368892804901744704075790924611706592548556421230743907297131863909536968425446916703903964971298549787012499102923063739682910296196688861780721860882015036889280490174470407579092461170659254855642123074390729713186390953696842544691";
@@ -113,7 +108,6 @@ public class CryptoControllerTest
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
-
     @Test
     public void createKeysByPrimesSuccessTest() throws Exception {
         String p = "17";
@@ -125,7 +119,6 @@ public class CryptoControllerTest
                 .andExpect(jsonPath("$.publicKey").isNotEmpty())
                 .andExpect(jsonPath("$.primesMultiplication").isNotEmpty());
     }
-
     @Test
     public void createKeysByPrimesFailureTest() throws Exception {
         String p = "17";
@@ -135,7 +128,6 @@ public class CryptoControllerTest
                 .andDo(print())
                 .andExpect(content().string("q isn't prime"));
     }
-
     @Test
     public void getKeysTestSuccess() throws Exception {
         mockMvc.perform(post("/rsa"));
@@ -145,11 +137,25 @@ public class CryptoControllerTest
                 .andExpect(jsonPath("$.publicKey").isNotEmpty())
                 .andExpect(jsonPath("$.primesMultiplication").isNotEmpty());
     }
-
     @Test
     public void getKeysTestNotFound() throws Exception {
         mockMvc.perform(get("/keys"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+    @Test
+    public void signTestSuccess() throws Exception {
+        mockMvc.perform(post("/rsa"));
+        ResponseRequestMessage requestMessage = new ResponseRequestMessage("Hello World");
+        mockMvc.perform(post("/sign").contentType("application/json").content(objectMapper.writeValueAsString(requestMessage)))
+                .andDo(print())
+                .andExpect(jsonPath("$.text").isNotEmpty());
+    }
+    @Test
+    public void signTestFailure() throws Exception {
+        ResponseRequestMessage requestMessage = new ResponseRequestMessage("Hello World");
+        mockMvc.perform(post("/sign").contentType("application/json").content(objectMapper.writeValueAsString(requestMessage)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }

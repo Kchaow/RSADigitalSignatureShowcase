@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAKeys;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAPrimes;
+import org.letgabr.RSADigitalSignatureShowcase.dto.ResponseRequestMessage;
 import org.letgabr.RSADigitalSignatureShowcase.service.CryptoSessionService;
 import org.letgabr.RSADigitalSignatureShowcase.util.MathCrypto;
 import org.letgabr.RSADigitalSignatureShowcase.util.PrimeTester;
@@ -45,24 +46,26 @@ public class CryptoController
                 .map(x -> new ResponseEntity<>(x, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
-
     @PostMapping("/primes-check")
     public ResponseEntity<Object> primeCheck(@RequestBody RSAPrimes rsaPrimes) {
         return new ResponseEntity<>(new RSAPrimes(cryptoSessionService.primeCheck(rsaPrimes.p()) ? "true" : "false",
                 cryptoSessionService.primeCheck(rsaPrimes.q()) ? "true" : "false"),
                 HttpStatus.OK);
     }
-
     @PostMapping("/keys-by-primes")
     public ResponseEntity<RSAKeys> createKeysByPrimes(@RequestBody RSAPrimes rsaPrimes, HttpServletRequest httpServletRequest) {
         return new ResponseEntity<>(cryptoSessionService.createKeysByPrimes(rsaPrimes, httpServletRequest),
                 HttpStatus.OK);
     }
-
     @GetMapping("/keys")
     public ResponseEntity<RSAKeys> getKeys(HttpServletRequest httpServletRequest) {
         return cryptoSessionService.getKeys(httpServletRequest)
                 .map(rsaKeys -> new ResponseEntity<>(rsaKeys, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+    }
+    @PostMapping("/sign")
+    public ResponseEntity<ResponseRequestMessage> sign(@RequestBody ResponseRequestMessage responseRequestMessage,
+                                                       HttpServletRequest httpServletRequest) {
+        return new ResponseEntity<>(cryptoSessionService.sign(responseRequestMessage, httpServletRequest), HttpStatus.OK);
     }
 }

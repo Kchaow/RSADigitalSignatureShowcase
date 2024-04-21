@@ -6,9 +6,11 @@ import org.apache.catalina.User;
 import org.letgabr.RSADigitalSignatureShowcase.dao.UserSessionRepository;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAKeys;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAPrimes;
+import org.letgabr.RSADigitalSignatureShowcase.dto.ResponseRequestMessage;
 import org.letgabr.RSADigitalSignatureShowcase.dto.UserSession;
 import org.letgabr.RSADigitalSignatureShowcase.exception.CompositeNumberException;
 import org.letgabr.RSADigitalSignatureShowcase.exception.LargeNumberException;
+import org.letgabr.RSADigitalSignatureShowcase.exception.NoUserKeysException;
 import org.letgabr.RSADigitalSignatureShowcase.util.MathCrypto;
 import org.letgabr.RSADigitalSignatureShowcase.util.PrimeTester;
 import org.letgabr.RSADigitalSignatureShowcase.util.RSACryptoSystem;
@@ -77,5 +79,15 @@ public class CryptoSessionService
         if (numb.bitLength() > length)
             throw new LargeNumberException("%s number too large".formatted(number));
         return primeTester.isPrime(numb);
+    }
+    public ResponseRequestMessage sign(ResponseRequestMessage responseRequestMessage, HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        UserSession userSession = userSessionRepository.findById(httpSession.getId())
+                .orElseThrow(() -> new NoUserKeysException("No rsa keys generated"));
+        return new ResponseRequestMessage(
+          RSACryptoSystem.encode(responseRequestMessage.text(),
+                  userSession.getRsaCryptoSystem().getPrivateKey(),
+                  userSession.getRsaCryptoSystem().getN())
+        );
     }
 }
