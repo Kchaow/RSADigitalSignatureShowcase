@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ConnectionStatus {
-    private String userId;
-    private String status;
+    private String userId = "";
+    private String status = "";
 }

@@ -12,12 +12,14 @@ public class UserSession
     @Id
     private String jsessionId;
     private RSACryptoSystem rsaCryptoSystem;
-    private String connectedUserJsessionId;
     private ConnectionStatus connectionStatus;
 
-    public UserSession() {}
+    public UserSession() {
+        connectionStatus = new ConnectionStatus();
+    }
     public UserSession(String jsessionId, RSACryptoSystem rsaCryptoSystem)
     {
+        connectionStatus = new ConnectionStatus();
         this.jsessionId = jsessionId;
         this.rsaCryptoSystem = rsaCryptoSystem;
     }
