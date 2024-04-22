@@ -3,6 +3,7 @@ package org.letgabr.RSADigitalSignatureShowcase.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.letgabr.RSADigitalSignatureShowcase.dto.MessageForEncrypt;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAKeys;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAPrimes;
 import org.letgabr.RSADigitalSignatureShowcase.dto.ResponseRequestMessage;
@@ -67,5 +68,13 @@ public class CryptoController
     public ResponseEntity<ResponseRequestMessage> sign(@RequestBody ResponseRequestMessage responseRequestMessage,
                                                        HttpServletRequest httpServletRequest) {
         return new ResponseEntity<>(cryptoSessionService.sign(responseRequestMessage, httpServletRequest), HttpStatus.OK);
+    }
+    @GetMapping("/connected-keys")
+    public ResponseEntity<RSAKeys> getKeysOfConnected(HttpServletRequest httpServletRequest) {
+        return new ResponseEntity<>(cryptoSessionService.getKeysOfConnected(httpServletRequest), HttpStatus.OK);
+    }
+    @PostMapping("/encrypt")
+    public ResponseEntity<ResponseRequestMessage> encrypt(@RequestBody MessageForEncrypt messageForEncrypt) {
+        return new ResponseEntity<>(cryptoSessionService.encrypt(messageForEncrypt.getResponseRequestMessage(), messageForEncrypt.getRsaKeys()), HttpStatus.OK);
     }
 }

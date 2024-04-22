@@ -76,7 +76,7 @@ public class UserChatController {
             clientUserSession.getConnectionStatus().setStatus(CONNECTED);
             userSessionRepository.save(clientUserSession);
             requestedUserSession.get().getConnectionStatus().setStatus(CONNECTED);
-            userSessionRepository.save(clientUserSession);
+            userSessionRepository.save(requestedUserSession.get());
             connectionStatus.setUserId(clientId);
             log.info("Client {} confirm connection with user {}", clientId, requestedId);
             log.info(clientUserSession.getConnectionStatus().toString());
