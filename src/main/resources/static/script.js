@@ -1,3 +1,9 @@
+function getRandomInt(min, max) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+  }
+
 window.onload = async function () {
         let cookies = document.cookie.split(';');
         let sessionId;
@@ -90,8 +96,8 @@ window.onload = async function () {
                 }
             }
         };
-        let messageId = 0;
         const messagingCallback = function (message) {
+            let messageId = getRandomInt(1, 100000);
             let messageWindow = document.querySelector('.messagewindow');
             let messageBody = JSON.parse(message.body);
             if (messageBody.id != sessionId) {
@@ -115,10 +121,11 @@ window.onload = async function () {
                 `
                 );
                 let decipherButton = document.querySelector(`[name='decryptm-${messageId}']`);
+                let messageDiv = document.querySelector(`.message-${messageId}`);
                 decipherButton.addEventListener('click', async () => {
                     let url = 'http://localhost:8080/decipher';
                     let responseRequestMessage = {
-                        text: messageBody.text
+                        text: messageDiv.textContent
                     };
                     let response = await fetch(url, {
                         headers: {
@@ -133,6 +140,35 @@ window.onload = async function () {
                         console.log('decipher message failed');
                     }
                 });
+                let veryficateButton = document.querySelector(`[name='veryficate-${messageId}']`);
+                veryficateButton.addEventListener('click', async () => {
+                    let requestMessage = {
+                        text: messageDiv.textContent
+                    };
+                    let keys = {
+                        privateKey: connectedPublicKey,
+                        publicKey: null,
+                        primesMultiplication: connectedN
+                    }
+                    let messageWithRsa = {
+                        responseRequestMessage: requestMessage,
+                        rsaKeys: keys
+                    };
+                    let url = 'http://localhost:8080/decipher-by-keys';
+                    let response = await fetch(url, {
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                          },
+                        method: 'POST',
+                        body: JSON.stringify(messageWithRsa)
+                    });
+                    if (response.status == 200) {
+                        document.querySelector(`.message-${messageId}`).textContent = (await response.json()).text;
+                    } else {
+                        console.log('sign check failed');
+                    }
+                });
+                messageId += 1;
             }
             console.log('Message received');
             console.log(message.body);

@@ -3,7 +3,7 @@ package org.letgabr.RSADigitalSignatureShowcase.dto;
 import lombok.Data;
 
 @Data
-public class MessageForEncrypt {
+public class MessageWithKeys {
     private ResponseRequestMessage responseRequestMessage;
     private RSAKeys rsaKeys;
 }

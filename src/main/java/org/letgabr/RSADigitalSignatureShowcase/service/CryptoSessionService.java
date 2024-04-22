@@ -118,4 +118,9 @@ public class CryptoSessionService
                 userSession.getRsaCryptoSystem().getPrivateKey(),
                 userSession.getRsaCryptoSystem().getN()));
     }
+    public  ResponseRequestMessage decipherByKeys(ResponseRequestMessage responseRequestMessage, RSAKeys rsaKeys) {
+        return new ResponseRequestMessage(RSACryptoSystem.decode(responseRequestMessage.text(),
+                new BigInteger(rsaKeys.privateKey()),
+                new BigInteger(rsaKeys.primesMultiplication())));
+    }
 }

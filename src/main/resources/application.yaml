@@ -17,4 +17,4 @@ thymeleaf:
   mode: HTML
   cache: false
 crypto:
-  primeNumberLength: 512
+  primeNumberLength: 256
