@@ -110,4 +110,12 @@ public class CryptoSessionService
                 new BigInteger(rsaKeys.publicKey()),
                 new BigInteger(rsaKeys.primesMultiplication())));
     }
+    public ResponseRequestMessage decipherBySessionKey(ResponseRequestMessage responseRequestMessage, HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        UserSession userSession = userSessionRepository.findById(httpSession.getId())
+                .orElseThrow(() -> new NoUserKeysException("No rsa keys generated"));
+        return new ResponseRequestMessage(RSACryptoSystem.decode(responseRequestMessage.text(),
+                userSession.getRsaCryptoSystem().getPrivateKey(),
+                userSession.getRsaCryptoSystem().getN()));
+    }
 }

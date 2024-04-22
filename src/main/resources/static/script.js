@@ -90,8 +90,50 @@ window.onload = async function () {
                 }
             }
         };
-
+        let messageId = 0;
         const messagingCallback = function (message) {
+            let messageWindow = document.querySelector('.messagewindow');
+            let messageBody = JSON.parse(message.body);
+            if (messageBody.id != sessionId) {
+                messageWindow.insertAdjacentHTML('beforeend', 
+                `
+                <div class="usersmessage">
+                            <div class="messagestruct">
+                                <div><b>&nbsp&nbsp&nbsp&nbsp ID: <b></div>
+                                <p class="connected"></p>
+                                <div class="message">
+                                    <div class="content message-${messageId}">
+                                        ${messageBody.text}
+                                    </div>
+                                    <div class="operations">
+                                        <button class="messageoperation" name="decryptm-${messageId}">Расшифровать</button>
+                                        <button class="messageoperation" name="veryficate-${messageId}">Проверить подпись</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                `
+                );
+                let decipherButton = document.querySelector(`[name='decryptm-${messageId}']`);
+                decipherButton.addEventListener('click', async () => {
+                    let url = 'http://localhost:8080/decipher';
+                    let responseRequestMessage = {
+                        text: messageBody.text
+                    };
+                    let response = await fetch(url, {
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                          },
+                        method: 'POST',
+                        body: JSON.stringify(responseRequestMessage)
+                    });
+                    if (response.status == 200) {
+                        document.querySelector(`.message-${messageId}`).textContent = (await response.json()).text;
+                    } else {
+                        console.log('decipher message failed');
+                    }
+                });
+            }
             console.log('Message received');
             console.log(message.body);
         }
@@ -132,9 +174,34 @@ window.onload = async function () {
 
         let sendButton = document.querySelector(`[name='send']`);
         sendButton.addEventListener("click", () =>{
+            let inputArea = document.querySelector('.inputmessagearea');
+            let messageWindow = document.querySelector('.messagewindow');
+            messageWindow.insertAdjacentHTML('beforeend', 
+            `
+            <div class="yourmessagebox">
+                        <div class="yourmessagestruct">
+                            <div><b>You: &nbsp&nbsp&nbsp&nbsp<b></div>
+                            <div class="yourmessage">
+                                <div class="operations">
+                                    <div class="yourincryptedmessage">
+                                        ${inputArea.value}
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    ${""}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            `
+            );
+            let message = {
+                id: sessionId,
+                text: inputArea.value
+            };
             client.publish({
                 destination: messageTopic,
-                body: "testing"
+                body: JSON.stringify(message)
             });
         });
 
