@@ -43,18 +43,18 @@
                 <div class="keysoutputbox"> 
                     <div class="keysoutputline">
                         <p>Тест 1:&nbsp&nbsp</p>
-                        <p class="p-testoutput"></p>
+                        <p th:text="${pIsPrime}" class="p-testoutput"></p>
                     </div>
                     <div class="keysoutputline">
                         <p>Тест 2:&nbsp&nbsp</p>
-                        <p class="q-testoutput"></p>
+                        <p th:text="${qIsPrime} class="q-testoutput"></p>
                     </div>
                 </div>
             </div>
             <div class="keysline">
 
                 <div class="buttonbox"> 
-                    <input class="keysbutton" type="submit" name="generateKeys" value="Сгенерировать ключи">
+                    <button class="keysbutton" name="generateKeys">"Сгенерировать ключи"</button>
                 </div>
 
                 <div class="keysoutputbox"> 
@@ -64,11 +64,11 @@
                             <div class="column">
                                 <div class="keysoutputline">
                                     <p>e:&nbsp&nbsp</p>
-                                    <input class="output" type="text">
+                                    <p th:text="${e}" class="output" id="e"></p>
                                 </div>
                                 <div class="keysoutputline">
                                     <p>n:&nbsp&nbsp</p>
-                                    <input class="output" type="text">
+                                    <p th:text="${n}" class="output" id="n1"></p>
                                 </div>
                             </div>
 
@@ -78,11 +78,11 @@
                             <div class="column">
                                 <div class="keysoutputline">
                                     <p>e:&nbsp&nbsp</p>
-                                    <input class="output" type="text">
+                                    <p th:text="${d}" class="output" id="d"></p>
                                 </div>
                                 <div class="keysoutputline">
                                     <p>d:&nbsp&nbsp</p>
-                                    <input class="output" type="text">
+                                    <p th:text="${n}" class="output" id="n2"></p>
                                 </div>
                             </div>
                         </div>
@@ -94,9 +94,9 @@
         <div class="connectionbox">
             <div class="connectioninterfacebox">
                 <div class="rowcon">
-                    <input class="connectionbutton" type="submit" name="StartConnection" value="Отправить запрос на соединение с пользователем">
-                    <input class="outputconn" type="text">
-                    <input class="connectionbutton" type="submit" name="KillConnection" value="Разорвать соединение">
+                    <button class="connectionbutton" name="StartConnection">Отправить запрос на соединение с пользователем</button>
+                    <input type="text" class="outputconn" id="connectionLine"/>
+                    <button class="connectionbutton" name="KillConnection">Разорвать соединение</button>
                 </div>
             </div>
             <div class="connectioninterfacebox">
@@ -107,11 +107,11 @@
                     <div class="column">
                         <div class="keysoutputline">
                             <p>e:&nbsp&nbsp</p>
-                            <input class="output" type="text">
+                            <p class="output" id="connectedPublic"></p>
                         </div>
                         <div class="keysoutputline">
                             <p>n:&nbsp&nbsp</p>
-                            <input class="output" type="text">
+                            <p class="output" id="connectedN"></p>
                         </div>
                     </div>
                 </div>
@@ -124,8 +124,9 @@
         <div class="messager">
             <div class="messagerinterface">
                 <div class="messagewindow">
+                    <p class="connected"></p>
                     <!-- Сообщение собеседника -->
-                    <div class="usersmessage">
+                    <!-- <div class="usersmessage">
                         <div class="messagestruct">
                             <div>
                                 <p>&nbsp&nbsp&nbsp&nbsp ID: <p>
@@ -135,12 +136,12 @@
                                     <p>Message</p>
                                 </div>
                                 <div class="operations">
-                                    <input class="messageoperation" type="submit" name="decryptm" value="Расшифровать">
-                                    <input class="messageoperation" type="submit" name="veryficate" value="Проверить подпись">
+                                    <button class="messageoperation" type="submit" name="decryptm">Расшифровать</button>
+                                    <button class="messageoperation" type="submit" name="veryficate">Проверить подпись</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- Сообщение пользователя -->
                     <div class="yourmessagebox">
                     <div class="yourmessagestruct">
@@ -164,9 +165,9 @@
                 <div class="inputpannel">
                     <textarea class="inputmessagearea" cols="200" rows="30" name="inputmessage"></textarea>
                     <div class="messagebuttons">
-                        <input class="messagebutton" type="submit" name="sign" value="Подписать">
-                        <input class="messagebutton" type="submit" name="encrypt" value="Зашифровать">
-                        <input class="messagebutton" type="submit" name="send" value="Отправить">
+                        <button class="messagebutton" name="sign">Подписать</button>
+                        <button class="messagebutton" name="encrypt">Зашифровать</button>
+                        <button class="messagebutton" name="send">Отправить</button>
                     </div>
                 </div>
             <div>

@@ -60,12 +60,10 @@ public class RSACryptoSystem
         this.privateKey = d;
     }
 
-    static public String encode(String text, BigInteger publicKey, BigInteger n)
-    {
+    static public String encode(String text, BigInteger publicKey, BigInteger n) {
         List<BigInteger> bigIntegers = text.chars().mapToObj(BigInteger::valueOf).toList();
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < bigIntegers.size(); i++)
-        {
+        for (int i = 0; i < bigIntegers.size(); i++) {
             if (i == 0)
                 stringBuilder.append(bigIntegers.get(i).modPow(publicKey, n).toString());
             else
@@ -74,8 +72,15 @@ public class RSACryptoSystem
         return stringBuilder.toString();
     }
 
-    static public String decode(String text, BigInteger privateKey, BigInteger n)
-    {
+    static public String encode(BigInteger number, BigInteger publicKey, BigInteger n) {
+        return number.modPow(publicKey, n).toString();
+    }
+
+    static public String decodeNumber(String number, BigInteger privateKey, BigInteger n) {
+        return new BigInteger(number).modPow(privateKey, n).toString();
+    }
+
+    static public String decodeText(String text, BigInteger privateKey, BigInteger n) {
         List<BigInteger> bigIntegers = Arrays.stream(text.split(" ")).map(BigInteger::new).toList();
         StringBuilder stringBuilder = new StringBuilder();
         for (BigInteger bigInteger : bigIntegers) {

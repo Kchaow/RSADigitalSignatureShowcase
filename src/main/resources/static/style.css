@@ -4,18 +4,18 @@ body{
 .keysbox{
     width: 100%;
     height: 400px;
-    background-color: #506D8F;
+    /* background-color: #506D8F; */
 }
 .connectionbox{
     width: 100%;
     height: 200px;
-    background-color: #506D8F;
+    /* background-color: #506D8F; */
 }
 .messager{
     margin-top: 2%;
     width: 100%;
     height: 600px;
-    background-color: #506D8F;
+    /* background-color: #506D8F; */
 }
 .keysline{
     width: 98%;
@@ -130,7 +130,7 @@ body{
     height: 20%;
 }
 .messagerinterface{
-    background-color: #6387B1;
+    /* background-color: #6387B1; */
     margin-top: 1%;
     margin-left: 1%;
     margin-right: 1%;

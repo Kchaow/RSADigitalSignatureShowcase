@@ -11,6 +11,7 @@ import org.letgabr.RSADigitalSignatureShowcase.dto.UserSession;
 import org.letgabr.RSADigitalSignatureShowcase.exception.CompositeNumberException;
 import org.letgabr.RSADigitalSignatureShowcase.exception.LargeNumberException;
 import org.letgabr.RSADigitalSignatureShowcase.exception.NoUserKeysException;
+import org.letgabr.RSADigitalSignatureShowcase.exception.NotConnectedException;
 import org.letgabr.RSADigitalSignatureShowcase.util.MathCrypto;
 import org.letgabr.RSADigitalSignatureShowcase.util.PrimeTester;
 import org.letgabr.RSADigitalSignatureShowcase.util.RSACryptoSystem;
@@ -89,5 +90,37 @@ public class CryptoSessionService
                   userSession.getRsaCryptoSystem().getPrivateKey(),
                   userSession.getRsaCryptoSystem().getN())
         );
+    }
+    public RSAKeys getKeysOfConnected(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        UserSession userSession = userSessionRepository.findById(httpSession.getId())
+                .orElseThrow(() -> new NoUserKeysException("No rsa keys generated"));
+//        if (!userSession.getConnectionStatus().getStatus().equals("connected"))
+//            throw new NotConnectedException();
+        UserSession userSessionOfConnected = userSessionRepository.findById(userSession.getConnectionStatus().getUserId())
+                .orElseThrow(() -> new NotConnectedException("user with %d doesn't exist".formatted(userSession.getConnectionStatus().getUserId())));
+        if (!userSessionOfConnected.getConnectionStatus().getUserId().equals(userSession.getJsessionId()))
+            throw new NotConnectedException("user %d doesn't communicate with %d".formatted(userSessionOfConnected.getJsessionId(), userSession.getJsessionId()));
+        return new RSAKeys(null,
+                userSessionOfConnected.getRsaCryptoSystem().getPublicKey().toString(),
+                userSessionOfConnected.getRsaCryptoSystem().getN().toString());
+    }
+    public ResponseRequestMessage encrypt(ResponseRequestMessage message, RSAKeys rsaKeys) {
+        return new ResponseRequestMessage(RSACryptoSystem.encode(message.text(),
+                new BigInteger(rsaKeys.publicKey()),
+                new BigInteger(rsaKeys.primesMultiplication())));
+    }
+    public ResponseRequestMessage decipherBySessionKey(ResponseRequestMessage responseRequestMessage, HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        UserSession userSession = userSessionRepository.findById(httpSession.getId())
+                .orElseThrow(() -> new NoUserKeysException("No rsa keys generated"));
+        return new ResponseRequestMessage(RSACryptoSystem.decode(responseRequestMessage.text(),
+                userSession.getRsaCryptoSystem().getPrivateKey(),
+                userSession.getRsaCryptoSystem().getN()));
+    }
+    public  ResponseRequestMessage decipherByKeys(ResponseRequestMessage responseRequestMessage, RSAKeys rsaKeys) {
+        return new ResponseRequestMessage(RSACryptoSystem.decode(responseRequestMessage.text(),
+                new BigInteger(rsaKeys.privateKey()),
+                new BigInteger(rsaKeys.primesMultiplication())));
     }
 }

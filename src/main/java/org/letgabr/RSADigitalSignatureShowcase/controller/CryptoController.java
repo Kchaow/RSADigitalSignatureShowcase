@@ -3,6 +3,7 @@ package org.letgabr.RSADigitalSignatureShowcase.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.letgabr.RSADigitalSignatureShowcase.dto.MessageWithKeys;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAKeys;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAPrimes;
 import org.letgabr.RSADigitalSignatureShowcase.dto.ResponseRequestMessage;
@@ -67,5 +68,23 @@ public class CryptoController
     public ResponseEntity<ResponseRequestMessage> sign(@RequestBody ResponseRequestMessage responseRequestMessage,
                                                        HttpServletRequest httpServletRequest) {
         return new ResponseEntity<>(cryptoSessionService.sign(responseRequestMessage, httpServletRequest), HttpStatus.OK);
+    }
+    @GetMapping("/connected-keys")
+    public ResponseEntity<RSAKeys> getKeysOfConnected(HttpServletRequest httpServletRequest) {
+        return new ResponseEntity<>(cryptoSessionService.getKeysOfConnected(httpServletRequest), HttpStatus.OK);
+    }
+    @PostMapping("/encrypt")
+    public ResponseEntity<ResponseRequestMessage> encrypt(@RequestBody MessageWithKeys messageForEncrypt) {
+        return new ResponseEntity<>(cryptoSessionService.encrypt(messageForEncrypt.getResponseRequestMessage(), messageForEncrypt.getRsaKeys()), HttpStatus.OK);
+    }
+    //@PostMapping("/encrypt-number")
+
+    @PostMapping("/decipher")
+    public ResponseEntity<ResponseRequestMessage> decipherBySessionKey(@RequestBody ResponseRequestMessage responseRequestMessage, HttpServletRequest httpServletRequest) {
+        return new ResponseEntity<>(cryptoSessionService.decipherBySessionKey(responseRequestMessage, httpServletRequest), HttpStatus.OK);
+    }
+    @PostMapping("/decipher-by-keys")
+    public ResponseEntity<ResponseRequestMessage> decipherByKeys(@RequestBody MessageWithKeys messageWithKeys) {
+        return new ResponseEntity<>(cryptoSessionService.decipherByKeys(messageWithKeys.getResponseRequestMessage(), messageWithKeys.getRsaKeys()), HttpStatus.OK);
     }
 }
