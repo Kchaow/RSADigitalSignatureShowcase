@@ -107,4 +107,13 @@ public class MathCrypto
         }
         return result;
     }
+
+    static private int getBitLength(int num) {
+        int length = 0;
+        while (num != 0) {
+            num = num >> 1;
+            length++;
+        }
+        return length;
+    }
 }
