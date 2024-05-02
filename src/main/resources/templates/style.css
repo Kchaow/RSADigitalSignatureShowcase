@@ -166,7 +166,7 @@ body{
 }
 .inputpannel{
     width: 98%;
-    height: 28%;
+    /* height: 28%; */
     margin-left: 1%;
     margin-right: 1%;
     background-color: #7BA8DB;  
@@ -176,14 +176,20 @@ body{
     border-top: 1px solid #506D8F;
     display: flex;
 }
-.inputmessagearea{
-    width: 70%;
-    height: 97%;
+
+.textInput {
+    flex: 5;
+}
+
+.inputmessagearea {
+    width: 100%;
+    /* display: block; */
     resize: none;
 }
 .messagebuttons{
-    width: 30%;
-    height: 97%;
+    /* width: 30%;
+    height: 97%; */
+    flex: 3;
     background-color: #7BA8DB;
 }
 .messagebutton{

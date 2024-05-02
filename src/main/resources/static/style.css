@@ -1,3 +1,16 @@
+@font-face {
+    font-family: 'CodeNext-Trial-Thin';
+    font-style: normal;
+    font-weight: normal;
+    src: local('CodeNext-Trial-Thin'),
+         url(./fonts/CodeNext-Trial-Thin.otf) format('otf'),
+         url(./fonts/CodeNext-Trial-Thin.ttf) format('ttf');
+}
+
+p, button {
+    font-family: 'CodeNext-Trial-Thin';
+}
+
 body{
     background-color: #283748;
 }
@@ -23,7 +36,7 @@ body{
     margin-bottom: 1%;
     margin-left: 1%;
     margin-right: 1%;
-    background-color: #6387B1;
+    /* background-color: #6387B1; */
     display: flex;
 }
 .buttonbox{
@@ -91,6 +104,8 @@ body{
     border-radius: 5px;
     width: 90%;
     background-color: #edf4fc;
+    font-family: 'CodeNext-Trial-Thin';
+    font-size: 1rem;
 }
 .keysbutton:hover{
     background-color: #c3c9d0;
@@ -151,7 +166,7 @@ body{
 }
 .inputpannel{
     width: 98%;
-    height: 28%;
+    /* height: 28%; */
     margin-left: 1%;
     margin-right: 1%;
     background-color: #7BA8DB;  
@@ -161,14 +176,20 @@ body{
     border-top: 1px solid #506D8F;
     display: flex;
 }
-.inputmessagearea{
-    width: 70%;
-    height: 97%;
+
+.textInput {
+    flex: 5;
+}
+
+.inputmessagearea {
+    width: 100%;
+    /* display: block; */
     resize: none;
 }
 .messagebuttons{
-    width: 30%;
-    height: 97%;
+    /* width: 30%;
+    height: 97%; */
+    flex: 3;
     background-color: #7BA8DB;
 }
 .messagebutton{

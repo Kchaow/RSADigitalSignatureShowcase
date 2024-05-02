@@ -2,6 +2,7 @@ package org.letgabr.RSADigitalSignatureShowcase.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
 import org.letgabr.RSADigitalSignatureShowcase.dao.UserSessionRepository;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAKeys;
@@ -12,7 +13,6 @@ import org.letgabr.RSADigitalSignatureShowcase.exception.CompositeNumberExceptio
 import org.letgabr.RSADigitalSignatureShowcase.exception.LargeNumberException;
 import org.letgabr.RSADigitalSignatureShowcase.exception.NoUserKeysException;
 import org.letgabr.RSADigitalSignatureShowcase.exception.NotConnectedException;
-import org.letgabr.RSADigitalSignatureShowcase.util.MathCrypto;
 import org.letgabr.RSADigitalSignatureShowcase.util.PrimeTester;
 import org.letgabr.RSADigitalSignatureShowcase.util.RSACryptoSystem;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,9 +22,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @PropertySource("classpath:application.yaml")
 public class CryptoSessionService
 {
@@ -32,8 +36,10 @@ public class CryptoSessionService
     int length;
     private final UserSessionRepository userSessionRepository;
     private final PrimeTester primeTester;
-    public CryptoSessionService(UserSessionRepository userSessionRepository, PrimeTester primeTester) {
+    private final MessageDigest messageDigest;
+    public CryptoSessionService(UserSessionRepository userSessionRepository, PrimeTester primeTester) throws NoSuchAlgorithmException {
         this.userSessionRepository = userSessionRepository;
+        this.messageDigest = MessageDigest.getInstance("SHA-256");
         this.primeTester = primeTester;
     }
     public void createUserKeys(HttpServletRequest httpServletRequest) {
@@ -85,22 +91,21 @@ public class CryptoSessionService
         HttpSession httpSession = httpServletRequest.getSession();
         UserSession userSession = userSessionRepository.findById(httpSession.getId())
                 .orElseThrow(() -> new NoUserKeysException("No rsa keys generated"));
-        return new ResponseRequestMessage(
-          RSACryptoSystem.encode(responseRequestMessage.text(),
-                  userSession.getRsaCryptoSystem().getPrivateKey(),
-                  userSession.getRsaCryptoSystem().getN())
-        );
+        byte[] hashByte = messageDigest.digest(responseRequestMessage.text().getBytes(StandardCharsets.UTF_8));
+        String hash = new BigInteger(1, hashByte).toString(16);
+        log.info("user {} made message hash: {}", httpSession.getId(), hash);
+        String signedHash = RSACryptoSystem.encode(hash, userSession.getRsaCryptoSystem().getPrivateKey(), userSession.getRsaCryptoSystem().getN());
+        return new ResponseRequestMessage(signedHash);
     }
     public RSAKeys getKeysOfConnected(HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
+        log.info("user with {} sessionId requested public key of connected with him", httpSession.getId());
         UserSession userSession = userSessionRepository.findById(httpSession.getId())
                 .orElseThrow(() -> new NoUserKeysException("No rsa keys generated"));
-//        if (!userSession.getConnectionStatus().getStatus().equals("connected"))
-//            throw new NotConnectedException();
         UserSession userSessionOfConnected = userSessionRepository.findById(userSession.getConnectionStatus().getUserId())
-                .orElseThrow(() -> new NotConnectedException("user with %d doesn't exist".formatted(userSession.getConnectionStatus().getUserId())));
+                .orElseThrow(() -> new NotConnectedException("user with %s doesn't exist".formatted(userSession.getConnectionStatus().getUserId())));
         if (!userSessionOfConnected.getConnectionStatus().getUserId().equals(userSession.getJsessionId()))
-            throw new NotConnectedException("user %d doesn't communicate with %d".formatted(userSessionOfConnected.getJsessionId(), userSession.getJsessionId()));
+            throw new NotConnectedException("user %s doesn't communicate with %s".formatted(userSessionOfConnected.getJsessionId(), userSession.getJsessionId()));
         return new RSAKeys(null,
                 userSessionOfConnected.getRsaCryptoSystem().getPublicKey().toString(),
                 userSessionOfConnected.getRsaCryptoSystem().getN().toString());

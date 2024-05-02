@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -13,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
+@Slf4j
 public class RSACryptoSystem
 {
     private BigInteger privateKey;
@@ -65,23 +67,16 @@ public class RSACryptoSystem
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < bigIntegers.size(); i++) {
             if (i == 0)
-                stringBuilder.append(bigIntegers.get(i).modPow(publicKey, n).toString());
+                stringBuilder.append(bigIntegers.get(i).modPow(publicKey, n).toString(16));
             else
-                stringBuilder.append(" ").append(bigIntegers.get(i).modPow(publicKey, n).toString());
+                stringBuilder.append(" ").append(bigIntegers.get(i).modPow(publicKey, n).toString(16));
         }
         return stringBuilder.toString();
     }
 
-    static public String encode(BigInteger number, BigInteger publicKey, BigInteger n) {
-        return number.modPow(publicKey, n).toString();
-    }
-
-    static public String decodeNumber(String number, BigInteger privateKey, BigInteger n) {
-        return new BigInteger(number).modPow(privateKey, n).toString();
-    }
-
-    static public String decodeText(String text, BigInteger privateKey, BigInteger n) {
-        List<BigInteger> bigIntegers = Arrays.stream(text.split(" ")).map(BigInteger::new).toList();
+    static public String decode(String text, BigInteger privateKey, BigInteger n) {
+        log.info("decoding message: {}", text);
+        List<BigInteger> bigIntegers = Arrays.stream(text.split(" ")).map(x -> new BigInteger(x, 16)).toList();
         StringBuilder stringBuilder = new StringBuilder();
         for (BigInteger bigInteger : bigIntegers) {
             stringBuilder.append(Character.toChars(bigInteger.modPow(privateKey, n).intValue()));

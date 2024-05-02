@@ -4,12 +4,14 @@ import lombok.Data;
 import org.letgabr.RSADigitalSignatureShowcase.util.RSACryptoSystem;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 @Data
 @RedisHash
 public class UserSession
 {
     @Id
+    @Indexed
     private String jsessionId;
     private RSACryptoSystem rsaCryptoSystem;
     private ConnectionStatus connectionStatus;

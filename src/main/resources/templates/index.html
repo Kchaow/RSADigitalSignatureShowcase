@@ -3,10 +3,17 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- <link rel="stylesheet" th:href="@{style.css}"> -->
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" th:href="@{style.css}">
+        <!-- <link rel="stylesheet" href="style.css"> -->
         <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@5.0.0/bundles/stomp.umd.js"></script>
-        <script th:src="@{script.js}"></script>
+        <!-- <script th:src="@{js/connectionsTopicCallback.js}" type="module"></script>
+        <script th:src="@{js/util.js}" type="module"></script>
+        <script th:src="@{js/connectionsTopicCallback.js}" type="module"></script>
+        <script th:src="@{js/connectionsTopicCallback.js}" type="module"></script>
+        <script th:src="@{js/connectionsTopicCallback.js}" type="module"></script>
+        <script th:src="@{js/connectionsTopicCallback.js}" type="module"></script>
+        <script th:src="@{js/connectionsTopicCallback.js}" type="module"></script> -->
+        <script type="module" th:src="@{js/script.js}"></script>
         <title>RSADigitalSignatureShowcase</title>
     </head>
 
@@ -22,11 +29,11 @@
                 <div class="keysoutputbox"> 
                     <div class="keysoutputline">
                         <p>p:&nbsp&nbsp</p>
-                        <p th:value="${p}" class="p-output"></p>
+                        <p th:text="${p}" class="p-output"></p>
                     </div>
                     <div class="keysoutputline">
                         <p>q:&nbsp&nbsp</p>
-                        <p th:value="${q}" class="q-output"></p>
+                        <p th:text="${q}" class="q-output"></p>
                     </div>
                 </div>
                 <div class="idbox">
@@ -47,7 +54,7 @@
                     </div>
                     <div class="keysoutputline">
                         <p>Тест 2:&nbsp&nbsp</p>
-                        <p th:text="${qIsPrime} class="q-testoutput"></p>
+                        <p th:text="${qIsPrime}" class="q-testoutput"></p>
                     </div>
                 </div>
             </div>
@@ -95,7 +102,7 @@
             <div class="connectioninterfacebox">
                 <div class="rowcon">
                     <button class="connectionbutton" name="StartConnection">Отправить запрос на соединение с пользователем</button>
-                    <input type="text" class="outputconn" id="connectionLine"/>
+                    <input th:value="${connectedUser}" type="text" class="outputconn" id="connectionLine"/>
                     <button class="connectionbutton" name="KillConnection">Разорвать соединение</button>
                 </div>
             </div>
@@ -107,11 +114,11 @@
                     <div class="column">
                         <div class="keysoutputline">
                             <p>e:&nbsp&nbsp</p>
-                            <p class="output" id="connectedPublic"></p>
+                            <p th:text="${connectedPublicKey}" class="output" id="connectedPublic"></p>
                         </div>
                         <div class="keysoutputline">
                             <p>n:&nbsp&nbsp</p>
-                            <p class="output" id="connectedN"></p>
+                            <p th:text="${connectedN}" class="output" id="connectedN"></p>
                         </div>
                     </div>
                 </div>
@@ -126,14 +133,15 @@
                 <div class="messagewindow">
                     <p class="connected"></p>
                     <!-- Сообщение собеседника -->
-                    <!-- <div class="usersmessage">
+                    <div class="usersmessage">
                         <div class="messagestruct">
                             <div>
                                 <p>&nbsp&nbsp&nbsp&nbsp ID: <p>
                             </div>
                             <div class="message">
                                 <div class="content">
-                                    <p>Message</p>
+                                    <p>Sign</p>
+                                    <p class="message-text-0">Message</p>
                                 </div>
                                 <div class="operations">
                                     <button class="messageoperation" type="submit" name="decryptm">Расшифровать</button>
@@ -141,10 +149,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                     <!-- Сообщение пользователя -->
                     <div class="yourmessagebox">
-                    <div class="yourmessagestruct">
+                        <div class="yourmessagestruct">
                             <div>
                                 <p>You: &nbsp&nbsp&nbsp&nbsp<p>
                             </div>
@@ -155,6 +163,7 @@
                                     </div>
                                 </div>
                                 <div class="content">
+                                    <p>Sign</p>
                                     <p>Message</p>
                                 </div>
                             </div>
@@ -163,7 +172,10 @@
                     <!-- ZZZZZZZZZZZZZZZZZZZZZZ -->
                 </div>
                 <div class="inputpannel">
-                    <textarea class="inputmessagearea" cols="200" rows="30" name="inputmessage"></textarea>
+                    <div class="textInput">
+                        <p id="signInput">sign</p>
+                        <textarea class="inputmessagearea" name="inputmessage"></textarea>
+                    </div>
                     <div class="messagebuttons">
                         <button class="messagebutton" name="sign">Подписать</button>
                         <button class="messagebutton" name="encrypt">Зашифровать</button>
