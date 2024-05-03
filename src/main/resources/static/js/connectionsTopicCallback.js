@@ -55,6 +55,11 @@ async function getKeysOfConnected() {
         let keys = await response.json();
         document.querySelector('#connectedPublic').textContent = keys.publicKey;
         document.querySelector('#connectedN').textContent = keys.primesMultiplication;
+
+        document.querySelector('[name=KillConnection]').disabled = false;
+        document.querySelector(`[name='send']`).disabled = false;
+        document.querySelector(`[name='sign']`).disabled = false;
+        document.querySelector(`[name='encrypt']`).disabled = false;
     } else {
         console.log('failed to get public key');
         console.log( await response.text());

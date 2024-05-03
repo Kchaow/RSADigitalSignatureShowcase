@@ -11,7 +11,6 @@ import encrypt from "./encrypt.js";
 window.onload = async function () {
         let sessionId = getJsessionId();
 
-
         const client = new StompJs.Client({
             brokerURL: 'ws://localhost:8080/ws',
             debug: function (str) {
@@ -58,6 +57,17 @@ window.onload = async function () {
 
         let encryptButton = document.querySelector(`[name='encrypt']`);
         encryptButton.addEventListener('click', encrypt);
+
+        if (document.querySelector('#userStatus').value != 'generated') {
+            sendConnectionRequestButton.disabled = true;
+            checkPrime.disabled = true;
+            generateKeys.disabled = true;
+            document.querySelector('[name=KillConnection]').disabled = true;
+        } else {
+            signButton.disabled = true;
+            encryptButton.disabled = true;
+            sendButton.disabled = true;
+        }
 
         client.activate();
 }

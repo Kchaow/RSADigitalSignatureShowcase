@@ -1,4 +1,5 @@
 let currentMessageTopic;
+let encryptedText;
 
 export function getRandomInt(min, max) {
     const minCeiled = Math.ceil(min);
@@ -27,8 +28,10 @@ export function getCurrentMessageTopic() {
     return currentMessageTopic;
 }
 
-// export function getMessageTopic(sessionId) {
-//     return `/topic/messages/${sessionId + document.querySelector('.connected').textContent}`;
-// }
+export function getEncryptedText() {
+    return encryptedText;
+}
 
-
+export function setEncryptedText(text) {
+    encryptedText = text;
+}

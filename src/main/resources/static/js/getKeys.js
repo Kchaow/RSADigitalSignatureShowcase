@@ -7,6 +7,8 @@ export default async function getKeys() {
         document.querySelector('#d').textContent = result.privateKey;
         document.querySelector('#n1').textContent = result.primesMultiplication;
         document.querySelector('#n2').textContent = result.primesMultiplication;
+
+        document.querySelector(`[name='StartConnection']`).disabled = false;
     } else {
         console.log('failed to get keys');
     }

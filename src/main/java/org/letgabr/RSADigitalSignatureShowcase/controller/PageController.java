@@ -31,6 +31,7 @@ public class PageController {
 //                userSessionRepository.save(x);
 //            }
 //        });
+        model.addAttribute("userStatus", userSession.map(x -> "generated").orElseGet(() -> "new"));
         model.addAttribute("p", userSession.map(x -> x.getRsaCryptoSystem().getP().toString())
                 .orElseGet(() -> ""));
         model.addAttribute("q", userSession.map(x -> x.getRsaCryptoSystem().getQ().toString())

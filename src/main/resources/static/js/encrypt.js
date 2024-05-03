@@ -1,7 +1,10 @@
+import { setEncryptedText } from "./util.js";
+
 export default async function encrypt() {
     console.log('encrypting...');
     let url = `http://localhost:8080/encrypt`;
     let inputArea = document.querySelector('.inputmessagearea');
+    setEncryptedText(inputArea.value);
     let responseRequestMessage = {
         text: inputArea.value
     };

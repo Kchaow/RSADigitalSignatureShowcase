@@ -1,8 +1,25 @@
-import { getCurrentMessageTopic } from "./util.js";
+import { getCurrentMessageTopic, getEncryptedText } from "./util.js";
 
-export default function sendMessage(sessionId, stompClient) {
+export default async function sendMessage(sessionId, stompClient) {
     let inputArea = document.querySelector('.inputmessagearea');
     let messageWindow = document.querySelector('.messagewindow');
+    let sign = document.querySelector('#signInput');
+    let hash;
+
+    let url = 'http://localhost:8080/hash';
+    let response = await fetch(url, {
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        method: 'POST',
+        body: JSON.stringify({ text: getEncryptedText() })
+    });
+    if (response.status == 200) {
+        hash = (await response.json()).text;
+    } else {
+        console.log(`failed to get hash`);
+    }
+
     messageWindow.insertAdjacentHTML('beforeend', 
     `
         <div class="usersmessage receiver-message">
@@ -12,19 +29,19 @@ export default function sendMessage(sessionId, stompClient) {
                     <div class="content">
                         <div class="content-pairs">
                             <p class="lab">Подпись сообщения:</p>
-                            <p class="scroll"></p>
+                            <p class="scroll">${sign.value}</p>
                         </div>
                         <div class="content-pairs">
                             <p class="lab">Хэш сообщения:</p>
-                            <p class="scroll"></p>
+                            <p class="scroll">${hash}</p>
                         </div>
                         <div class="content-pairs">
                             <p class="lab">Текст сообщения:</p>
-                            <p class="scroll"></p>
+                            <p class="scroll">${getEncryptedText()}</p>
                         </div>
                         <div class="content-pairs">
                             <p class="lab">Зашифрованное сообщения:</p>
-                            <p class="scroll"></p>
+                            <p class="scroll">${inputArea.value}</p>
                         </div>
                     </div>
                 </div>
@@ -35,7 +52,7 @@ export default function sendMessage(sessionId, stompClient) {
     let message = {
         id: sessionId,
         text: inputArea.value,
-        sign: document.querySelector('#signInput').value
+        sign: sign.value
     };
     stompClient.publish({
         destination: getCurrentMessageTopic(),

@@ -11,12 +11,11 @@ export default async function messagingTopicCallback(message) {
                 <div class="usersmessage">
                         <div class="messagestruct">
                             <p class="connected"></p>
-                            <p id="message-sender-${messageId}" style="margin: 5px 0px 5px 5px;">1</p>
-                            <div class="message">
+                            <div class="message sender">
                                 <div class="content">
                                     <div class="content-pairs">
                                         <p class="lab">Статус проверки подписи: </p>
-                                        <p style="flex: 5; margin-top: p;" id="sign-verification-status-${messageId}">Проверена</p>
+                                        <p style="flex: 5; margin-top: p;" id="sign-verification-status-${messageId}"></p>
                                     </div>
                                     <div class="content-pairs">
                                         <p class="lab">Подпись сообщения:</p>
@@ -32,8 +31,8 @@ export default async function messagingTopicCallback(message) {
                                     </div>
                                 </div>
                                 <div class="operations">
-                                    <button class="messageoperation" name="decryptm-0">Расшифровать</button>
-                                    <button class="messageoperation" name="veryficate-0">Проверить подпись</button>
+                                    <button class="messageoperation" name="decryptm-${messageId}">Расшифровать</button>
+                                    <button class="messageoperation" name="veryficate-${messageId}">Проверить подпись</button>
                                 </div>
                             </div>
                         </div>

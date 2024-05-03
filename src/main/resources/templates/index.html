@@ -4,12 +4,12 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" th:href="@{style.css}">
-        <link rel="stylesheet" href="style.css">
         <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@5.0.0/bundles/stomp.umd.js"></script>
         <script type="module" th:src="@{js/script.js}"></script>
         <title>RSADigitalSignatureShowcase</title>
     </head>
     <body>
+        <input type="hidden" id="userStatus" th:value="${userStatus}"/>
         <!-- Интерфейс генерации ключей -->
         <div class="keysbox">
             <div class="keysline">
