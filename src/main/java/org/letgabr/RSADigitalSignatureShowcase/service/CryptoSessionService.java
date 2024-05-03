@@ -91,8 +91,7 @@ public class CryptoSessionService
         HttpSession httpSession = httpServletRequest.getSession();
         UserSession userSession = userSessionRepository.findById(httpSession.getId())
                 .orElseThrow(() -> new NoUserKeysException("No rsa keys generated"));
-        byte[] hashByte = messageDigest.digest(responseRequestMessage.text().getBytes(StandardCharsets.UTF_8));
-        String hash = new BigInteger(1, hashByte).toString(16);
+        String hash = getHash(responseRequestMessage.text());
         log.info("user {} made message hash: {}", httpSession.getId(), hash);
         String signedHash = RSACryptoSystem.encode(hash, userSession.getRsaCryptoSystem().getPrivateKey(), userSession.getRsaCryptoSystem().getN());
         return new ResponseRequestMessage(signedHash);
@@ -127,5 +126,12 @@ public class CryptoSessionService
         return new ResponseRequestMessage(RSACryptoSystem.decode(responseRequestMessage.text(),
                 new BigInteger(rsaKeys.privateKey()),
                 new BigInteger(rsaKeys.primesMultiplication())));
+    }
+    public ResponseRequestMessage getHashForResponseRequestMessage(ResponseRequestMessage responseRequestMessage) {
+        return new ResponseRequestMessage(getHash(responseRequestMessage.text()));
+    }
+    private String getHash(String str) {
+        byte[] hashByte = messageDigest.digest(str.getBytes(StandardCharsets.UTF_8));
+        return new BigInteger(1, hashByte).toString(16);
     }
 }

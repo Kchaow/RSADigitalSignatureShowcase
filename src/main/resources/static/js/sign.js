@@ -15,7 +15,7 @@ export default async function sign() {
     });
     if (response.status == 200) {
         let result = await response.json();
-        signInput.textContent = result.text;
+        signInput.value = result.text;
         console.log('signing finished');
     } else {
         console.log('sign failed');

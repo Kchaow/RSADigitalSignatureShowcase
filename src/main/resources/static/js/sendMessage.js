@@ -26,7 +26,8 @@ export default function sendMessage(sessionId, stompClient) {
     );
     let message = {
         id: sessionId,
-        text: inputArea.value
+        text: inputArea.value,
+        sign: document.querySelector('#signInput').value
     };
     stompClient.publish({
         destination: getCurrentMessageTopic(),

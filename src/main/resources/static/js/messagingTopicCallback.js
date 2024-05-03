@@ -14,6 +14,9 @@ export default async function messagingTopicCallback(message) {
                         <p class="connected"></p>
                         <div class="message">
                             <div class="content">
+                                <p id="sign-verification-status-${messageId}"></p>
+                                <p id="message-sign-${messageId}">${messageBody.sign}</p>
+                                <p id="message-hash-${messageId}"></p>
                                 <p id="message-text-${messageId}">${messageBody.text}</p>
                             </div>
                             <div class="operations">
@@ -26,11 +29,10 @@ export default async function messagingTopicCallback(message) {
         `
         );
         let decipherButton = document.querySelector(`[name='decryptm-${messageId}']`);
-        let messageDiv = document.querySelector(`.message-${messageId}`);
         decipherButton.addEventListener('click', async () => decipher(messageId));
 
         let veryficateButton = document.querySelector(`[name='veryficate-${messageId}']`);
-        veryficateButton.addEventListener('click', async () => veryficateSign(messageDiv, messageId));
+        veryficateButton.addEventListener('click', async () => veryficateSign(messageId));
     }
     console.log('Message received');
     console.log(message.body);
@@ -57,9 +59,25 @@ async function decipher(messageId) {
     }
 }
 
-async function veryficateSign(messageDiv, messageId) {
+async function veryficateSign(messageId) {
+    await signCheck(messageId);
+    await getMessageHash(messageId);
+
+    let verificationStatus = document.querySelector(`#sign-verification-status-${messageId}`);
+    if (document.querySelector(`#message-hash-${messageId}`).textContent 
+            == document.querySelector(`#message-sign-${messageId}`).textContent) {
+        verificationStatus.textContent = 'Подпись верна';
+    } else {
+        verificationStatus.textContent = 'Подпись неверна';
+    }
+
+
+}
+
+async function signCheck(messageId) {
+    let signEl = document.querySelector(`#message-sign-${messageId}`);
     let requestMessage = {
-        text: messageDiv.textContent
+        text: signEl.textContent
     };
     let keys = {
         privateKey: document.querySelector('#connectedPublic').textContent,
@@ -79,8 +97,27 @@ async function veryficateSign(messageDiv, messageId) {
         body: JSON.stringify(messageWithRsa)
     });
     if (response.status == 200) {
-        document.querySelector(`.message-${messageId}`).textContent = (await response.json()).text;
+        signEl.textContent = (await response.json()).text;
     } else {
         console.log('sign check failed');
+    }
+}
+
+async function getMessageHash(messageId) {
+    let requestMessage = {
+        text: document.querySelector(`#message-text-${messageId}`).textContent
+    }
+    let url = 'http://localhost:8080/hash';
+    let response = await fetch(url, {
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        method: 'POST',
+        body: JSON.stringify(requestMessage)
+    });
+    if (response.status == 200) {
+        document.querySelector(`#message-hash-${messageId}`).textContent = (await response.json()).text;
+    } else {
+        console.log(`failed to get hash for message ${messageId}`);
     }
 }

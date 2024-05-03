@@ -76,8 +76,6 @@ public class CryptoController
     public ResponseEntity<ResponseRequestMessage> encrypt(@RequestBody MessageWithKeys messageForEncrypt) {
         return new ResponseEntity<>(cryptoSessionService.encrypt(messageForEncrypt.getResponseRequestMessage(), messageForEncrypt.getRsaKeys()), HttpStatus.OK);
     }
-    //@PostMapping("/encrypt-number")
-
     @PostMapping("/decipher")
     public ResponseEntity<ResponseRequestMessage> decipherBySessionKey(@RequestBody ResponseRequestMessage responseRequestMessage, HttpServletRequest httpServletRequest) {
         return new ResponseEntity<>(cryptoSessionService.decipherBySessionKey(responseRequestMessage, httpServletRequest), HttpStatus.OK);
@@ -85,5 +83,9 @@ public class CryptoController
     @PostMapping("/decipher-by-keys")
     public ResponseEntity<ResponseRequestMessage> decipherByKeys(@RequestBody MessageWithKeys messageWithKeys) {
         return new ResponseEntity<>(cryptoSessionService.decipherByKeys(messageWithKeys.getResponseRequestMessage(), messageWithKeys.getRsaKeys()), HttpStatus.OK);
+    }
+    @PostMapping("/hash")
+    public ResponseEntity<ResponseRequestMessage> getHash(@RequestBody ResponseRequestMessage responseRequestMessage) {
+        return new ResponseEntity<>(cryptoSessionService.getHashForResponseRequestMessage(responseRequestMessage), HttpStatus.OK);
     }
 }
