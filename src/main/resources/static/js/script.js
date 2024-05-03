@@ -16,7 +16,7 @@ window.onload = async function () {
         let isValid = await isConnectionValid();
 
         const client = new StompJs.Client({
-            brokerURL: `${window.location.origin}/ws`,
+            brokerURL: `ws://${window.location.host}/ws`,
             debug: function (str) {
                 console.log(str);
             },

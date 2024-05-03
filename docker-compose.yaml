@@ -6,3 +6,9 @@ services:
     command: redis-server /usr/local/etc/redis/redis.conf
     volumes:
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+  showcase-app:
+    image: rsa-showcase
+    ports:
+      - 80:8080
+    depends_on:
+      - redis
