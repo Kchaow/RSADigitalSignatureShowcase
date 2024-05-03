@@ -8,6 +8,8 @@ import getKeys from "./getKeys.js";
 import sign from "./sign.js";
 import encrypt from "./encrypt.js";
 import messagingTopicCallback from "./messagingTopicCallback.js";
+import initiateDisconnect from "./initiateDisconnect.js";
+import disconnectCallback from "./disconnectCallback.js";
 
 window.onload = async function () {
         let sessionId = getJsessionId();
@@ -27,7 +29,7 @@ window.onload = async function () {
             // Do something, all subscribes must be done is this callback
             // This is needed because this will be executed after a (re)connect
             const subscription = client.subscribe(`/topic/connections/${sessionId}`, (message) => connectionsTopicCallback(message, client));
-            
+            client.subscribe(`/topic/disconnect/${sessionId}`, disconnectCallback);
             
             // console.log(`is valid: ${isConnectionValid}`);
             if (isValid) {
@@ -71,16 +73,20 @@ window.onload = async function () {
         let encryptButton = document.querySelector(`[name='encrypt']`);
         encryptButton.addEventListener('click', encrypt);
 
+        let disconnectButton = document.querySelector('[name=KillConnection]');
+        disconnectButton.addEventListener('click', initiateDisconnect)
+
         if (document.querySelector('#userStatus').value != 'generated') {
             sendConnectionRequestButton.disabled = true;
             checkPrime.disabled = true;
             generateKeys.disabled = true;
-            document.querySelector('[name=KillConnection]').disabled = true;
+            disconnectButton.disabled = true;
         }
         if (!isValid) {
             signButton.disabled = true;
             encryptButton.disabled = true;
             sendButton.disabled = true;
+            disconnectButton.disabled = true;
         }
 
         client.activate();

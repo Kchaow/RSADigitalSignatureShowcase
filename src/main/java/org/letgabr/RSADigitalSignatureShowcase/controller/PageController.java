@@ -21,16 +21,10 @@ public class PageController {
         this.primeTester = primeTester;
     }
     @RequestMapping("/")
-    public String testing(Model model, HttpServletRequest httpServletRequest) {
+    public String setupPage(Model model, HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
         Optional<UserSession> userSession = userSessionRepository.findById(httpSession.getId());
-//        userSession.ifPresent(x -> {
-//            if (x.getConnectionStatus().getStatus().equals("connected")) {
-//                x.getConnectionStatus().setStatus("free");
-//                x.getConnectionStatus().setUserId("");
-//                userSessionRepository.save(x);
-//            }
-//        });
+
         model.addAttribute("userStatus", userSession.map(x -> "generated").orElseGet(() -> "new"));
         model.addAttribute("p", userSession.map(x -> x.getRsaCryptoSystem().getP().toString())
                 .orElseGet(() -> ""));

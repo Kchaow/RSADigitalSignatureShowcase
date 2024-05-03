@@ -65,6 +65,25 @@ public class ConnectionService {
             sendConfirmResponseToReceiver(initiator, receiver.get(), request, initiatorSessionId, receiverSessionId);
         }
     }
+    public void disconnectUsers(HttpServletRequest httpServletRequest) {
+        String sessionId = httpServletRequest.getSession().getId();
+        Optional<UserSession> initiator = userSessionRepository.findById(sessionId);
+        if (initiator.isEmpty() || !initiator.get().getConnection().getStatus().equals(ConnectionStatus.CONNECTED))
+            return;
+        Optional<UserSession> receiver = userSessionRepository.findById(initiator.get().getConnection().getUserId());
+        if (receiver.isEmpty() || !receiver.get().getConnection().getStatus().equals(ConnectionStatus.CONNECTED)
+                || !receiver.get().getConnection().getUserId().equals(sessionId))
+            return;
+        initiator.get().getConnection().setStatus(ConnectionStatus.NO_CONNECTION);
+        initiator.get().getConnection().setUserId("");
+        userSessionRepository.save(initiator.get());
+        receiver.get().getConnection().setStatus(ConnectionStatus.NO_CONNECTION);
+        String receiverId = receiver.get().getJsessionId();
+        receiver.get().getConnection().setUserId("");
+        userSessionRepository.save(receiver.get());
+        simpMessagingTemplate.convertAndSend("/topic/disconnect/" + receiverId,
+                new ResponseRequestMessage(sessionId));
+    }
     private void sendConnectionRequestToReceiver(UserSession initiator, String initiatorSessionId,
                                                  UserSession receiver, Connection request,
                                                  String receiverSessionId) {
