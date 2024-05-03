@@ -1,5 +1,5 @@
 import connectionsTopicCallback from "./connectionsTopicCallback.js";
-import {getJsessionId} from "./util.js";
+import {getJsessionId, getMessagingTopic, isConnectionValid, setCurrentMessageTopic} from "./util.js";
 import sendConnectionRequest from "./sendConnectionRequest.js";
 import generateRSA from "./generateRSA.js";
 import sendMessage from "./sendMessage.js";
@@ -7,9 +7,11 @@ import checkPrimes from "./checkPrimes.js";
 import getKeys from "./getKeys.js";
 import sign from "./sign.js";
 import encrypt from "./encrypt.js";
+import messagingTopicCallback from "./messagingTopicCallback.js";
 
 window.onload = async function () {
         let sessionId = getJsessionId();
+        let isValid = await isConnectionValid();
 
         const client = new StompJs.Client({
             brokerURL: 'ws://localhost:8080/ws',
@@ -21,10 +23,21 @@ window.onload = async function () {
             heartbeatOutgoing: 4000,
         });
 
-        client.onConnect = function (frame) {
+        client.onConnect = async function (frame) {
             // Do something, all subscribes must be done is this callback
             // This is needed because this will be executed after a (re)connect
             const subscription = client.subscribe(`/topic/connections/${sessionId}`, (message) => connectionsTopicCallback(message, client));
+            
+            
+            // console.log(`is valid: ${isConnectionValid}`);
+            if (isValid) {
+                let topic = await getMessagingTopic();
+                client.subscribe(topic, messagingTopicCallback);
+                setCurrentMessageTopic(topic);
+                console.log('Connection with user recovered');
+            } else {
+                console.log('Connection with user already invalid');
+            }
         };
 
         client.onStompError = function (frame) {
@@ -63,7 +76,8 @@ window.onload = async function () {
             checkPrime.disabled = true;
             generateKeys.disabled = true;
             document.querySelector('[name=KillConnection]').disabled = true;
-        } else {
+        }
+        if (!isValid) {
             signButton.disabled = true;
             encryptButton.disabled = true;
             sendButton.disabled = true;

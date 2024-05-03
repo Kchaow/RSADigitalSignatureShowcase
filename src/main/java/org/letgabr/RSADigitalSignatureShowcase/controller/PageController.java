@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.math.BigInteger;
 import java.util.Optional;
 
 @Controller
@@ -48,8 +47,8 @@ public class PageController {
         model.addAttribute("n", userSession.map(x -> x.getRsaCryptoSystem().getN().toString())
                 .orElseGet(() -> ""));
 
-        if (userSession.isPresent() && userSession.get().getConnectionStatus().getStatus().equals("connected")) {
-            Optional<UserSession> connectedUserSession = userSessionRepository.findById(userSession.get().getConnectionStatus().getUserId());
+        if (userSession.isPresent() && userSession.get().getConnection().getStatus().equals("connected")) {
+            Optional<UserSession> connectedUserSession = userSessionRepository.findById(userSession.get().getConnection().getUserId());
             model.addAttribute("connectedUser", connectedUserSession.map(UserSession::getJsessionId)
                     .orElseGet(() -> ""));
             model.addAttribute("connectedPublicKey", connectedUserSession.map(x -> x.getRsaCryptoSystem().getPublicKey().toString())

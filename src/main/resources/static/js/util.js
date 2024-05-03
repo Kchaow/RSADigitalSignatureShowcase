@@ -35,3 +35,26 @@ export function getEncryptedText() {
 export function setEncryptedText(text) {
     encryptedText = text;
 }
+
+export async function isConnectionValid() {
+    let url = `http://localhost:8080/isConnectionValid`;
+    let response = await fetch(url);
+    if (response.ok) {
+        let result = await response.json();
+        // console.log(result);
+        return (result.text === 'true');
+    } else {
+        console.log('failed to get isConnectionValid');
+    }
+}
+
+export async function getMessagingTopic() {
+    let url = `http://localhost:8080/messagingTopic`;
+    let response = await fetch(url);
+    if (response.ok) {
+        let result = await response.json();
+        return result.text;
+    } else {
+        console.log('failed to get messagingTopic');
+    }
+}

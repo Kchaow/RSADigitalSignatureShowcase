@@ -7,6 +7,7 @@ import org.letgabr.RSADigitalSignatureShowcase.dto.MessageWithKeys;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAKeys;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAPrimes;
 import org.letgabr.RSADigitalSignatureShowcase.dto.ResponseRequestMessage;
+import org.letgabr.RSADigitalSignatureShowcase.service.ConnectionService;
 import org.letgabr.RSADigitalSignatureShowcase.service.CryptoSessionService;
 import org.letgabr.RSADigitalSignatureShowcase.util.PrimeTester;
 import org.letgabr.RSADigitalSignatureShowcase.util.RSACryptoSystem;
@@ -28,11 +29,9 @@ import java.util.Optional;
 public class CryptoController
 {
     @Value("${crypto.primeNumberLength}")
-    int length;
-    final PrimeTester primeTester;
-    final CryptoSessionService cryptoSessionService;
-    public CryptoController(PrimeTester primeTester, CryptoSessionService cryptoSessionService) {
-        this.primeTester = primeTester;
+    private int length;
+    private final CryptoSessionService cryptoSessionService;
+    public CryptoController(PrimeTester primeTester, CryptoSessionService cryptoSessionService, ConnectionService connectionService) {
         this.cryptoSessionService = cryptoSessionService;
     }
     @PostMapping("/rsa")

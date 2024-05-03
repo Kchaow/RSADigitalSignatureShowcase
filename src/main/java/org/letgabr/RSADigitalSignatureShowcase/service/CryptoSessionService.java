@@ -3,7 +3,6 @@ package org.letgabr.RSADigitalSignatureShowcase.service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.letgabr.RSADigitalSignatureShowcase.dao.UserSessionRepository;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAKeys;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAPrimes;
@@ -17,8 +16,6 @@ import org.letgabr.RSADigitalSignatureShowcase.util.PrimeTester;
 import org.letgabr.RSADigitalSignatureShowcase.util.RSACryptoSystem;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -101,9 +98,9 @@ public class CryptoSessionService
         log.info("user with {} sessionId requested public key of connected with him", httpSession.getId());
         UserSession userSession = userSessionRepository.findById(httpSession.getId())
                 .orElseThrow(() -> new NoUserKeysException("No rsa keys generated"));
-        UserSession userSessionOfConnected = userSessionRepository.findById(userSession.getConnectionStatus().getUserId())
-                .orElseThrow(() -> new NotConnectedException("user with %s doesn't exist".formatted(userSession.getConnectionStatus().getUserId())));
-        if (!userSessionOfConnected.getConnectionStatus().getUserId().equals(userSession.getJsessionId()))
+        UserSession userSessionOfConnected = userSessionRepository.findById(userSession.getConnection().getUserId())
+                .orElseThrow(() -> new NotConnectedException("user with %s doesn't exist".formatted(userSession.getConnection().getUserId())));
+        if (!userSessionOfConnected.getConnection().getUserId().equals(userSession.getJsessionId()))
             throw new NotConnectedException("user %s doesn't communicate with %s".formatted(userSessionOfConnected.getJsessionId(), userSession.getJsessionId()));
         return new RSAKeys(null,
                 userSessionOfConnected.getRsaCryptoSystem().getPublicKey().toString(),

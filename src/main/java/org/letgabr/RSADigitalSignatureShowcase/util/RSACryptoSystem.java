@@ -22,7 +22,6 @@ public class RSACryptoSystem
     private BigInteger n;
     private BigInteger q;
     private BigInteger p;
-
     public RSACryptoSystem(int pLength, int qLength)
     {
         this.p = MathCrypto.getPrimeBigInteger(pLength);
@@ -40,7 +39,6 @@ public class RSACryptoSystem
         this.publicKey = e;
         this.privateKey = d;
     }
-
     public RSACryptoSystem(BigInteger p, BigInteger q)
     {
         PrimeTester primeTester = new MillerRabinPrimeTester();
@@ -61,7 +59,6 @@ public class RSACryptoSystem
         this.publicKey = e;
         this.privateKey = d;
     }
-
     static public String encode(String text, BigInteger publicKey, BigInteger n) {
         List<BigInteger> bigIntegers = text.chars().mapToObj(BigInteger::valueOf).toList();
         StringBuilder stringBuilder = new StringBuilder();
@@ -73,9 +70,7 @@ public class RSACryptoSystem
         }
         return stringBuilder.toString();
     }
-
     static public String decode(String text, BigInteger privateKey, BigInteger n) {
-        log.info("decoding message: {}", text);
         List<BigInteger> bigIntegers = Arrays.stream(text.split(" ")).map(x -> new BigInteger(x, 16)).toList();
         StringBuilder stringBuilder = new StringBuilder();
         for (BigInteger bigInteger : bigIntegers) {

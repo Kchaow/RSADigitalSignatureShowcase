@@ -14,14 +14,13 @@ public class UserSession
     @Indexed
     private String jsessionId;
     private RSACryptoSystem rsaCryptoSystem;
-    private ConnectionStatus connectionStatus;
+    private Connection connection;
 
     public UserSession() {
-        connectionStatus = new ConnectionStatus();
+        connection = new Connection();
     }
-    public UserSession(String jsessionId, RSACryptoSystem rsaCryptoSystem)
-    {
-        connectionStatus = new ConnectionStatus();
+    public UserSession(String jsessionId, RSACryptoSystem rsaCryptoSystem) {
+        connection = new Connection();
         this.jsessionId = jsessionId;
         this.rsaCryptoSystem = rsaCryptoSystem;
     }
