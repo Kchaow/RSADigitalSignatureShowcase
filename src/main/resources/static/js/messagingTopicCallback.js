@@ -8,24 +8,36 @@ export default async function messagingTopicCallback(message) {
     if (messageBody.id != sessionId) {
         messageWindow.insertAdjacentHTML('beforeend', 
         `
-        <div class="usersmessage">
-                    <div class="messagestruct">
-                        <div><b>&nbsp&nbsp&nbsp&nbsp ID: <b></div>
-                        <p class="connected"></p>
-                        <div class="message">
-                            <div class="content">
-                                <p id="sign-verification-status-${messageId}"></p>
-                                <p id="message-sign-${messageId}">${messageBody.sign}</p>
-                                <p id="message-hash-${messageId}"></p>
-                                <p id="message-text-${messageId}">${messageBody.text}</p>
-                            </div>
-                            <div class="operations">
-                                <button class="messageoperation" name="decryptm-${messageId}">Расшифровать</button>
-                                <button class="messageoperation" name="veryficate-${messageId}">Проверить подпись</button>
+                <div class="usersmessage">
+                        <div class="messagestruct">
+                            <p class="connected"></p>
+                            <p id="message-sender-${messageId}" style="margin: 5px 0px 5px 5px;">1</p>
+                            <div class="message">
+                                <div class="content">
+                                    <div class="content-pairs">
+                                        <p class="lab">Статус проверки подписи: </p>
+                                        <p style="flex: 5; margin-top: p;" id="sign-verification-status-${messageId}">Проверена</p>
+                                    </div>
+                                    <div class="content-pairs">
+                                        <p class="lab">Подпись сообщения:</p>
+                                        <p class="scroll" id="message-sign-${messageId}">${messageBody.sign}</p>
+                                    </div>
+                                    <div class="content-pairs">
+                                        <p class="lab">Хэш сообщения:</p>
+                                        <p class="scroll" id="message-hash-${messageId}"></p>
+                                    </div>
+                                    <div class="content-pairs">
+                                        <p class="lab">Текст сообщения:</p>
+                                        <p class="scroll" id="message-text-${messageId}">${messageBody.text}</p>
+                                    </div>
+                                </div>
+                                <div class="operations">
+                                    <button class="messageoperation" name="decryptm-0">Расшифровать</button>
+                                    <button class="messageoperation" name="veryficate-0">Проверить подпись</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
         `
         );
         let decipherButton = document.querySelector(`[name='decryptm-${messageId}']`);

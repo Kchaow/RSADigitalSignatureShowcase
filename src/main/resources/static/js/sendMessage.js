@@ -5,19 +5,27 @@ export default function sendMessage(sessionId, stompClient) {
     let messageWindow = document.querySelector('.messagewindow');
     messageWindow.insertAdjacentHTML('beforeend', 
     `
-        <div class="yourmessagebox">
-                <div class="yourmessagestruct">
-                    <div>
-                        <p>You: &nbsp&nbsp&nbsp&nbsp<p>
-                    </div>
-                    <div class="yourmessage">
-                        <div class="operations">
-                            <div class="yourincryptedmessage">
-                                ${inputArea.value}
-                            </div>
-                        </div>
+        <div class="usersmessage receiver-message">
+            <div class="receiver-messagestruct">
+                <p class="connected"></p>
+                <div class="message receiver">
                     <div class="content">
-                        ${""}
+                        <div class="content-pairs">
+                            <p class="lab">Подпись сообщения:</p>
+                            <p class="scroll"></p>
+                        </div>
+                        <div class="content-pairs">
+                            <p class="lab">Хэш сообщения:</p>
+                            <p class="scroll"></p>
+                        </div>
+                        <div class="content-pairs">
+                            <p class="lab">Текст сообщения:</p>
+                            <p class="scroll"></p>
+                        </div>
+                        <div class="content-pairs">
+                            <p class="lab">Зашифрованное сообщения:</p>
+                            <p class="scroll"></p>
+                        </div>
                     </div>
                 </div>
             </div>

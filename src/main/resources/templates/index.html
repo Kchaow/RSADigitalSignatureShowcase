@@ -4,56 +4,48 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" th:href="@{style.css}">
-        <!-- <link rel="stylesheet" href="style.css"> -->
+        <link rel="stylesheet" href="style.css">
         <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@5.0.0/bundles/stomp.umd.js"></script>
-        <!-- <script th:src="@{js/connectionsTopicCallback.js}" type="module"></script>
-        <script th:src="@{js/util.js}" type="module"></script>
-        <script th:src="@{js/connectionsTopicCallback.js}" type="module"></script>
-        <script th:src="@{js/connectionsTopicCallback.js}" type="module"></script>
-        <script th:src="@{js/connectionsTopicCallback.js}" type="module"></script>
-        <script th:src="@{js/connectionsTopicCallback.js}" type="module"></script>
-        <script th:src="@{js/connectionsTopicCallback.js}" type="module"></script> -->
         <script type="module" th:src="@{js/script.js}"></script>
         <title>RSADigitalSignatureShowcase</title>
     </head>
-
     <body>
         <!-- Интерфейс генерации ключей -->
         <div class="keysbox">
             <div class="keysline">
 
                 <div class="buttonbox"> 
-                <button class="keysbutton" name="generatePrime">Сгенерировать простое число</button>
+                    <button class="keysbutton" name="generatePrime">Сгенерировать простое число</button>
                 </div>
 
                 <div class="keysoutputbox"> 
                     <div class="keysoutputline">
-                        <p>p:&nbsp&nbsp</p>
-                        <p th:text="${p}" class="p-output"></p>
+                        <p id="p" class="primitive-name">p:&nbsp&nbsp</p>
+                        <p th:text="${p}" class="p-output primitive-value"></p>
                     </div>
                     <div class="keysoutputline">
-                        <p>q:&nbsp&nbsp</p>
-                        <p th:text="${q}" class="q-output"></p>
+                        <p id="q" class="primitive-name">q:&nbsp&nbsp</p>
+                        <p th:text="${q}" class="q-output primitive-value"></p>
                     </div>
                 </div>
                 <div class="idbox">
-                    <p>ID:</p>
-                    <p th:text="${sessionId}" class="idoutput">5409</p>
+                    <p class="idU">ID: </p>
+                    <p th:text="${sessionId}" class="idoutput"></p>
                 </div>
             </div>
             <div class="keysline">
 
                 <div class="buttonbox"> 
-                    <button class="keysbutton" type="submit" name="checkPrime">"Проверить числа на простоту"</button>
+                    <button class="keysbutton" type="submit" name="checkPrime">Проверить числа на простоту</button>
                 </div>
 
                 <div class="keysoutputbox"> 
                     <div class="keysoutputline">
-                        <p>Тест 1:&nbsp&nbsp</p>
+                        <p>Тест Ферма:&nbsp&nbsp</p>
                         <p th:text="${pIsPrime}" class="p-testoutput"></p>
                     </div>
                     <div class="keysoutputline">
-                        <p>Тест 2:&nbsp&nbsp</p>
+                        <p>Тест Миллера-Рабина:&nbsp&nbsp</p>
                         <p th:text="${qIsPrime}" class="q-testoutput"></p>
                     </div>
                 </div>
@@ -61,39 +53,39 @@
             <div class="keysline">
 
                 <div class="buttonbox"> 
-                    <button class="keysbutton" name="generateKeys">"Сгенерировать ключи"</button>
+                    <button class="keysbutton" name="generateKeys">Сгенерировать ключи</button>
                 </div>
 
                 <div class="keysoutputbox"> 
-                    <div class="column1">
+                    <!-- <div class="column1"> -->
                         <div class="row">
-                           <p>Открытый ключ:&nbsp&nbsp</p>
+                           <p>Открытый ключ&nbsp&nbsp</p>
                             <div class="column">
                                 <div class="keysoutputline">
-                                    <p>e:&nbsp&nbsp</p>
-                                    <p th:text="${e}" class="output" id="e"></p>
+                                    <p class="primitive-name">e:&nbsp&nbsp</p>
+                                    <p th:text="${e}" class="output primitive-value" id="e"></p>
                                 </div>
                                 <div class="keysoutputline">
-                                    <p>n:&nbsp&nbsp</p>
-                                    <p th:text="${n}" class="output" id="n1"></p>
+                                    <p class="primitive-name">n:&nbsp&nbsp</p>
+                                    <p th:text="${n}" class="output primitive-value" id="n1"></p>
                                 </div>
                             </div>
 
                         </div>
                         <div class="row">
-                            <p>Закрытый ключ:&nbsp&nbsp&nbsp</p>
+                            <p>Закрытый ключ&nbsp&nbsp&nbsp</p>
                             <div class="column">
                                 <div class="keysoutputline">
-                                    <p>e:&nbsp&nbsp</p>
-                                    <p th:text="${d}" class="output" id="d"></p>
+                                    <p class="primitive-name">e:&nbsp&nbsp</p>
+                                    <p th:text="${d}" class="output primitive-value" id="d"></p>
                                 </div>
                                 <div class="keysoutputline">
-                                    <p>d:&nbsp&nbsp</p>
-                                    <p th:text="${n}" class="output" id="n2"></p>
+                                    <p class="primitive-name">d:&nbsp&nbsp</p>
+                                    <p th:text="${n}" class="output primitive-value" id="n2"></p>
                                 </div>
                             </div>
                         </div>
-                    </div>  
+                    <!-- </div>   -->
                 </div>
             </div>
         </div>
@@ -113,62 +105,79 @@
                     </div>
                     <div class="column">
                         <div class="keysoutputline">
-                            <p>e:&nbsp&nbsp</p>
-                            <p th:text="${connectedPublicKey}" class="output" id="connectedPublic"></p>
+                            <p class="primitive-name">e:&nbsp&nbsp</p>
+                            <p th:text="${connectedPublicKey}" class="output primitive-value" id="connectedPublic"></p>
                         </div>
                         <div class="keysoutputline">
-                            <p>n:&nbsp&nbsp</p>
-                            <p th:text="${connectedN}" class="output" id="connectedN"></p>
+                            <p class="primitive-name">n:&nbsp&nbsp</p>
+                            <p th:text="${connectedN}" class="output primitive-value" id="connectedN"></p>
                         </div>
                     </div>
                 </div>
             <div>
         </div>
-
-
-
         <!-- Месседжер ебанный -->
         <div class="messager">
             <div class="messagerinterface">
                 <div class="messagewindow">
                     <p class="connected"></p>
                     <!-- Сообщение собеседника -->
-                    <div class="usersmessage">
+                    <!-- <div class="usersmessage">
                         <div class="messagestruct">
-                            <div>
-                                <p>&nbsp&nbsp&nbsp&nbsp ID: <p>
-                            </div>
-                            <div class="message">
+                            <p class="connected"></p>
+                            <div class="message sender">
                                 <div class="content">
-                                    <p>Sign</p>
-                                    <p class="message-text-0">Message</p>
-                                </div>
-                                <div class="operations">
-                                    <button class="messageoperation" type="submit" name="decryptm">Расшифровать</button>
-                                    <button class="messageoperation" type="submit" name="veryficate">Проверить подпись</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Сообщение пользователя -->
-                    <div class="yourmessagebox">
-                        <div class="yourmessagestruct">
-                            <div>
-                                <p>You: &nbsp&nbsp&nbsp&nbsp<p>
-                            </div>
-                            <div class="yourmessage">
-                                <div class="operations">
-                                    <div class="yourincryptedmessage">
-                                        dfsfs
+                                    <div class="content-pairs">
+                                        <p class="lab">Статус проверки подписи: </p>
+                                        <p style="flex: 5; margin-top: p;" id="sign-verification-status-0"></p>
+                                    </div>
+                                    <div class="content-pairs">
+                                        <p class="lab">Подпись сообщения:</p>
+                                        <p class="scroll" id="message-sign-0"></p>
+                                    </div>
+                                    <div class="content-pairs">
+                                        <p class="lab">Хэш сообщения:</p>
+                                        <p class="scroll" id="message-hash-0"></p>
+                                    </div>
+                                    <div class="content-pairs">
+                                        <p class="lab">Текст сообщения:</p>
+                                        <p class="scroll" id="message-text-0"></p>
                                     </div>
                                 </div>
-                                <div class="content">
-                                    <p>Sign</p>
-                                    <p>Message</p>
+                                <div class="operations">
+                                    <button class="messageoperation" name="decryptm-0">Расшифровать</button>
+                                    <button class="messageoperation" name="veryficate-0">Проверить подпись</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
+                    <!-- Сообщение пользователя -->
+                    <!-- <div class="usersmessage receiver-message">
+                        <div class="receiver-messagestruct">
+                            <p class="connected"></p>
+                            <div class="message receiver">
+                                <div class="content">
+                                    <div class="content-pairs">
+                                        <p class="lab">Подпись сообщения:</p>
+                                        <p class="scroll"></p>
+                                    </div>
+                                    <div class="content-pairs">
+                                        <p class="lab">Хэш сообщения:</p>
+                                        <p class="scroll"></p>
+                                    </div>
+                                    <div class="content-pairs">
+                                        <p class="lab">Текст сообщения:</p>
+                                        <p class="scroll"></p>
+                                    </div>
+                                    <div class="content-pairs">
+                                        <p class="lab">Зашифрованное сообщения:</p>
+                                        <p class="scroll"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
                     <!-- ZZZZZZZZZZZZZZZZZZZZZZ -->
                 </div>
                 <div class="inputpannel">

@@ -3,172 +3,146 @@
     font-style: normal;
     font-weight: normal;
     src: local('CodeNext-Trial-Thin'),
-         url(fonts/CodeNext-Trial-Thin.otf) format('otf'),
-         url(fonts/CodeNext-Trial-Thin.ttf) format('ttf');
+         url(./fonts/CodeNext-Trial-Thin.otf) format('otf'),
+         url(./fonts/CodeNext-Trial-Thin.ttf) format('ttf');
 }
-
 p, button {
     font-family: 'CodeNext-Trial-Thin';
+    font-size: 1rem;
 }
-
-body{
+body {
     background-color: #283748;
 }
-.keysbox{
-    width: 100%;
-    height: 400px;
-    /* background-color: #506D8F; */
-}
-.connectionbox{
-    width: 100%;
+.connectionbox {
     height: 200px;
-    /* background-color: #506D8F; */
 }
-.messager{
-    margin-top: 2%;
-    width: 100%;
-    height: 600px;
-    /* background-color: #506D8F; */
+.messager {
+    margin-top: 10px;
+    height: 40rem;
 }
-.keysline{
-    width: 98%;
-    height: 30%;
-    margin-bottom: 1%;
-    margin-left: 1%;
-    margin-right: 1%;
-    /* background-color: #6387B1; */
+.keysline {
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
     display: flex;
 }
-.buttonbox{
+.buttonbox {
+    flex: 2;
     display: flex;
     background-color: #7BA8DB;
-    width: 29%;
-    height: 100%;
     align-items: center;
 }
-.keysoutputbox{
-    width: 80%;
-    margin-left: 1%;
-    height: 100%;
+.keysoutputbox {
+    flex: 5;
+    margin-left: 10px;
+    padding: 0px 10px 0px 10px;
     background-color: #7BA8DB;
 }
+.keysoutputbox p {
+    font-size: 1rem;
+}
 .idbox{
-    width:15%;
-    height:100%;
-    font-size: 30px;
-    margin-left: 1%;
+    flex: 2;
+    margin-left: 10px;
     background-color: #7BA8DB;
     display: flex;
     align-items: center;
     border-radius: 50px;
 }
+.idbox p {
+    font-size: 1rem;
+}
+.idU {
+    margin-left: 10px;
+    flex: 1;
+}
+.idoutput {
+    margin-right: 10px;
+    flex: 8;
+    word-break: break-all;
+}
+.output {
+    margin: 0px;
+}
 .keysoutputline{
-    height: 50%;
     display: flex;
     align-items: center;
-    font-size: 20px;
-    margin-left: 3%;
 }
-.output{
-    border-radius: 5px;
-    background-color: #edf4fc;
-    width: 90%;
+.primitive-name {
+    flex: 1;
 }
-.testoutput{
+.primitive-value {
+    flex: 17;
+    word-break: break-all;
+}
+.testoutput {
     border-radius: 5px;
     background-color: #edf4fc;
     pointer-events: none;
-    width: 30%;
 }
-.column1{
-    height: 100%;
+.column1 {
     align-items: center;
 }
-.column{
-    height: 100%;
+.column {
     align-items: center;
-    width: 80%;
 }
-.row{
+.row {
     display:flex;
-    height: 50%;
     align-items: center;
-    font-size: 20px;
-    margin-left: 3%;
     background-color: #7BA8DB;
 }
-.keysbutton{
-    margin-left: 5%;
-    margin-right: 5%;
+.keysbutton {
+    margin: 0px 10px 0px 10px;
     height: 40%;
     border-radius: 5px;
-    width: 90%;
+    width: 100%;
     background-color: #edf4fc;
     font-family: 'CodeNext-Trial-Thin';
     font-size: 1rem;
 }
-.keysbutton:hover{
+.keysbutton:hover {
     background-color: #c3c9d0;
 }
-.connectioninterfacebox{
+.connectioninterfacebox {
     height: 44%;
     width: 100%;
     align-items: center;
     margin-top: 1%;
     margin-bottom: 1%;
-
 }
-.rowcon{
+.rowcon {
     display:flex;
-    height: 100%;
     align-items: center;
-    font-size: 20px;
-    margin-left: 1%;
-    margin-right: 1%;
+    margin-left: 10px;
+    margin-right: 10px;
     background-color: #7BA8DB;
 }
-.connectionbutton{
-    margin-left: 5%;
-    margin-right: 5%;
-    height: 40%;
+.connectionbutton {
+    margin: 20px 10px 20px 10px;
+    height: 3rem;
     border-radius: 5px;
     width: 40%;
     background-color: #edf4fc;
 }
-.connectionbutton:hover{
+.connectionbutton:hover {
     background-color: #c3c9d0;
 }
-.outputconn{
+.outputconn {
     border-radius: 5px;
     background-color: #edf4fc;
     width: 40%;
     height: 20%;
 }
-.messagerinterface{
-    /* background-color: #6387B1; */
-    margin-top: 1%;
-    margin-left: 1%;
-    margin-right: 1%;
-    margin-bottom: 1%;
-    width: 98%;
-    height: 98%;
-}
-.messagewindow{
-    margin-top: 1%;
-    margin-left: 1%;
-    margin-right: 1%;
-    width: 98%;
-    height: 70%;
+.messagewindow {
+    padding-bottom: 10px;
+    margin: 10px 10px 0px 10px;
     background-color: #edf4fc;
     border-radius: 5px;
     overflow-y: auto;
     border: 2px solid #506D8F;
 }
-.inputpannel{
-    width: 98%;
-    /* height: 28%; */
-    margin-left: 1%;
-    margin-right: 1%;
+.inputpannel {
+    margin: 0px 10px 0px 10px;
     background-color: #7BA8DB;  
     border-bottom: 2px solid #506D8F;
     border-left: 2px solid #506D8F;
@@ -176,65 +150,95 @@ body{
     border-top: 1px solid #506D8F;
     display: flex;
 }
-
 .textInput {
     flex: 5;
+    margin-right: 15px;
+    display: flex;
+    flex-direction: column;
 }
-
-.inputmessagearea {
+#signInput {
+    flex: 2;
+    display: block;
     width: 100%;
-    /* display: block; */
-    resize: none;
+    border: 1px solid #283748;
 }
-.messagebuttons{
-    /* width: 30%;
-    height: 97%; */
+.inputmessagearea {
+    min-height: 7rem;
+    flex: 5;
+    width: 100%;
+    display: block;
+    resize: none;
+    border: 1px solid #283748;
+}
+.messagebuttons {
     flex: 3;
     background-color: #7BA8DB;
+    display: flex;
+    flex-direction: column;
 }
-.messagebutton{
-    width: 98%;
-    height: 30%;
-    margin-top: 1%;
-    margin-left: 1%;
-    margin-right: 1%;
+.messagebutton {
     border-radius: 5px;
+    flex: 1;
 }
-.messagebutton:hover{
+.messagebutton:hover {
     background-color: #c3c9d0;
 }
-.message{
+.message {
     display: flex;
     align-items: center;
-    min-height: 50px;
+    justify-content: space-between;
     background-color: #7BA8DB;
+    padding: 10px 0px 0px 0px;
 }
-.operations{
-    display: block;
+.sender {
+    max-width: 70%;
+}
+.scroll {
+    overflow: auto;
+    max-height: 3rem;
+    flex: 5;
+    border: 1px solid #506D8F;
+}
+.operations {
+    margin-left: 10px;
     justify-content: flex;
-    width: 200px;
-    margin-left: 1%;
-    margin-right: 1%;
+    flex: 1;
 }
-.messageoperation{
+.messageoperation {
     width: 200px;
 }
-.yourmessage{
+.yourmessage {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     background-color: #adcdf1;
 }
-.yourmessagestruct{
+.yourmessagestruct {
     display: block;
     text-align: right;
 }
-.content{
-    margin-right: 5%;
-    margin-left: 5%;
+.content {
+    margin: 0px 10px 0px 10px;
+    flex: 3;
+    word-break: break-all;
 }
-.yourincryptedmessage{
+.yourincryptedmessage {
     background-color: #edf4fc;
     margin-top: 3%;
     margin-bottom: 3%;
+}
+.content-pairs {
+    display: flex;
+}
+
+.content-pairs p {
+    margin: 0px 0px 10px 0px;
+}
+
+.lab {
+    margin-right: 5px;
+    flex: 2;
+}
+.receiver-messagestruct {
+    margin-left: 30%;
 }
