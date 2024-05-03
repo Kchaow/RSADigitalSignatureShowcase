@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.letgabr.RSADigitalSignatureShowcase.dao.UserSessionRepository;
 import org.letgabr.RSADigitalSignatureShowcase.dto.UserSession;
+import org.letgabr.RSADigitalSignatureShowcase.util.ConnectionStatus;
 import org.letgabr.RSADigitalSignatureShowcase.util.PrimeTester;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,7 +48,7 @@ public class PageController {
         model.addAttribute("n", userSession.map(x -> x.getRsaCryptoSystem().getN().toString())
                 .orElseGet(() -> ""));
 
-        if (userSession.isPresent() && userSession.get().getConnection().getStatus().equals("connected")) {
+        if (userSession.isPresent() && userSession.get().getConnection().getStatus().equals(ConnectionStatus.CONNECTED)) {
             Optional<UserSession> connectedUserSession = userSessionRepository.findById(userSession.get().getConnection().getUserId());
             model.addAttribute("connectedUser", connectedUserSession.map(UserSession::getJsessionId)
                     .orElseGet(() -> ""));

@@ -1,5 +1,11 @@
 let currentMessageTopic;
 let encryptedText;
+export const CONNECTION_REQUEST = "CONNECTION_REQUEST";
+export const CONNECTION_ACCEPT = "CONNECTION_ACCEPT";
+export const CONNECTION_CONFIRM = "CONNECTION_CONFIRM";
+export const CONNECTED = "CONNECTED";
+export const NO_CONNECTION = "NO_CONNECTION";
+
 
 export function getRandomInt(min, max) {
     const minCeiled = Math.ceil(min);

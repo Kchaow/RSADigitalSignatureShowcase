@@ -1,29 +1,29 @@
-import {getJsessionId, getCurrentMessageTopic, setCurrentMessageTopic} from "./util.js";
+import * as util from "./util.js";
 import messagingTopicCallback from "./messagingTopicCallback.js";
 
 export default async function connectionsTopicCallback(message, stompClient) {
     // called when the client receives a STOMP message from the server
-    let sessionId = getJsessionId();
+    let sessionId = util.getJsessionId();
     console.log('Message received');
     let connectionStatus = await JSON.parse(message.body);
     console.log(`received connection status: ${connectionStatus.status}`);
-
-    if (connectionStatus.status == 'connectionRequest' && confirm(`Принять запрос на подключение от ${connectionStatus.userId}?`)) {
+    console.log(util.CONNECTION_REQUEST);
+    if (connectionStatus.status == util.CONNECTION_REQUEST && confirm(`Принять запрос на подключение от ${connectionStatus.userId}?`)) {
         sendConnectionAccept(connectionStatus, stompClient);
     }
-    else if (connectionStatus.status == 'connectionAccept') {
+    else if (connectionStatus.status == util.CONNECTION_ACCEPT) {
         sendConnectionConfirm(connectionStatus, stompClient);
         subscribeToMessageTopic(connectionStatus, sessionId, stompClient, true);
         getKeysOfConnected();
     }
-    else if (connectionStatus.status == 'connectionConfirm') {
+    else if (connectionStatus.status == util.CONNECTION_CONFIRM) {
         subscribeToMessageTopic(connectionStatus, sessionId, stompClient, false);
         getKeysOfConnected();
     }
 };
 
 function sendConnectionAccept(connectionStatus, stompClient) {
-    connectionStatus.status = 'connectionAccept';
+    connectionStatus.status = util.CONNECTION_ACCEPT;
     stompClient.publish({
         destination: "/app/requestConnection",
         body: JSON.stringify(connectionStatus)
@@ -33,15 +33,15 @@ function sendConnectionAccept(connectionStatus, stompClient) {
 function subscribeToMessageTopic(connectionStatus, sessionId, stompClient, isSessionIdFirst) {
     document.querySelector('.connected').textContent = connectionStatus.userId;
     if (isSessionIdFirst) {
-        setCurrentMessageTopic(`/topic/messages/${sessionId + document.querySelector('.connected').textContent}`);
+        util.setCurrentMessageTopic(`/topic/messages/${sessionId + document.querySelector('.connected').textContent}`);
     } else {
-        setCurrentMessageTopic(`/topic/messages/${document.querySelector('.connected').textContent + sessionId}`);
+        util.setCurrentMessageTopic(`/topic/messages/${document.querySelector('.connected').textContent + sessionId}`);
     }
-    stompClient.subscribe(getCurrentMessageTopic(), messagingTopicCallback);
+    stompClient.subscribe(util.getCurrentMessageTopic(), messagingTopicCallback);
 }
 
 function sendConnectionConfirm(connectionStatus, stompClient) {
-    connectionStatus.status = 'connectionConfirm';
+    connectionStatus.status = util.CONNECTION_CONFIRM;
     stompClient.publish({
         destination: "/app/requestConnection",
         body: JSON.stringify(connectionStatus)
