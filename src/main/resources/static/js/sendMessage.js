@@ -6,7 +6,7 @@ export default async function sendMessage(sessionId, stompClient) {
     let sign = document.querySelector('#signInput');
     let hash;
 
-    let url = 'http://localhost:8080/hash';
+    let url = `${window.location.origin}/hash`;
     let response = await fetch(url, {
         headers: {
             'Content-Type': 'application/json;charset=utf-8'

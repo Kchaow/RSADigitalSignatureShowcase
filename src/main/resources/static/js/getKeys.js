@@ -1,5 +1,5 @@
 export default async function getKeys() {
-    let url = `http://localhost:8080/keys`;
+    let url = `${window.location.origin}/keys`;
     let response = await fetch(url);
     if (response.status == 200) {
         let result = await response.json();

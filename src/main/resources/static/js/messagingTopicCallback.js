@@ -51,7 +51,7 @@ export default async function messagingTopicCallback(message) {
 
 async function decipher(messageId) {
     let messageText = document.querySelector(`#message-text-${messageId}`);
-    let url = 'http://localhost:8080/decipher';
+    let url = `${window.location.origin}/decipher`;
     console.log(`message to decipher: ${messageText.textContent}`);
     let responseRequestMessage = {
         text: messageText.textContent
@@ -99,7 +99,7 @@ async function signCheck(messageId) {
         responseRequestMessage: requestMessage,
         rsaKeys: keys
     };
-    let url = 'http://localhost:8080/decipher-by-keys';
+    let url = `${window.location.origin}/decipher-by-keys`;
     let response = await fetch(url, {
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -118,7 +118,7 @@ async function getMessageHash(messageId) {
     let requestMessage = {
         text: document.querySelector(`#message-text-${messageId}`).textContent
     }
-    let url = 'http://localhost:8080/hash';
+    let url = `${window.location.origin}/hash`;
     let response = await fetch(url, {
         headers: {
             'Content-Type': 'application/json;charset=utf-8'

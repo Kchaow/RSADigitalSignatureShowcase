@@ -2,7 +2,7 @@ import { setEncryptedText } from "./util.js";
 
 export default async function encrypt() {
     console.log('encrypting...');
-    let url = `http://localhost:8080/encrypt`;
+    let url = `${window.location.origin}/encrypt`;
     let inputArea = document.querySelector('.inputmessagearea');
     setEncryptedText(inputArea.value);
     let responseRequestMessage = {

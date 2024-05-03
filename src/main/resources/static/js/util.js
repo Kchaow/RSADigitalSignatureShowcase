@@ -43,7 +43,7 @@ export function setEncryptedText(text) {
 }
 
 export async function isConnectionValid() {
-    let url = `http://localhost:8080/isConnectionValid`;
+    let url = `${window.location.origin}/isConnectionValid`;
     let response = await fetch(url);
     if (response.ok) {
         let result = await response.json();
@@ -55,7 +55,7 @@ export async function isConnectionValid() {
 }
 
 export async function getMessagingTopic() {
-    let url = `http://localhost:8080/messagingTopic`;
+    let url = `${window.location.origin}/messagingTopic`;
     let response = await fetch(url);
     if (response.ok) {
         let result = await response.json();

@@ -49,7 +49,7 @@ function sendConnectionConfirm(connectionStatus, stompClient) {
 }
 
 async function getKeysOfConnected() {
-    let url = `http://localhost:8080/connected-keys`;
+    let url = `${window.location.origin}/connected-keys`;
     let response = await fetch(url);
     if (response.status == 200) {
         let keys = await response.json();

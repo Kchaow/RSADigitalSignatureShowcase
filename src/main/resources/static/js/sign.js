@@ -1,6 +1,6 @@
 export default async function sign() {
     console.log('signing...');
-    let url = `http://localhost:8080/sign`;
+    let url = `${window.location.origin}/sign`;
     let inputArea = document.querySelector('.inputmessagearea');
     let signInput = document.querySelector('#signInput');
     let responseRequestMessage = {

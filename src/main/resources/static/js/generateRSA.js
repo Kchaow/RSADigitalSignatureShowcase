@@ -1,13 +1,13 @@
 export default async function generateRSA() {
     console.log('generating rsa...')
-    let url = `http://localhost:8080/rsa`;
+    let url = `${window.location.origin}/rsa`;
     let response = await fetch(url, {
          method: "POST"
     });
     if (response.status == 204) {
         console.log('rsa generated');
                 
-        url = `http://localhost:8080/primes`;
+        url = `${window.location.origin}/primes`;
         response = await fetch(url);
         let result = await response.json();
         document.querySelector('.p-output').textContent = result.p;

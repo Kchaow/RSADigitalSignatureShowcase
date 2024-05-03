@@ -8,7 +8,7 @@ export default async function initiateDisconnect() {
     document.querySelector('[name="send"]').disabled = true;
     document.querySelector('[name=KillConnection]').disabled = true;
     setCurrentMessageTopic('');
-    let url = `http://localhost:8080/disconnect`;
+    let url = `${window.location.origin}/disconnect`;
     let response = await fetch(url);
     if (response.ok) {
         console.log('user was disconnected');

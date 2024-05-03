@@ -1,7 +1,7 @@
 export default async function checkPrimes() {
     let p = document.querySelector('.p-output').textContent;
     let q = document.querySelector('.q-output').textContent;
-    let url = `http://localhost:8080/primes-check`;
+    let url = `${window.location.origin}/primes-check`;
     let rsaPrimes = {
         "p": p,
         "q": q
