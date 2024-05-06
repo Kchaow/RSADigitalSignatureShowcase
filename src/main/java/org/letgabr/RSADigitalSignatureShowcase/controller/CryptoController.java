@@ -1,16 +1,14 @@
 package org.letgabr.RSADigitalSignatureShowcase.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.letgabr.RSADigitalSignatureShowcase.dto.MessageWithKeys;
+import org.letgabr.RSADigitalSignatureShowcase.dto.UserMessage;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAKeys;
 import org.letgabr.RSADigitalSignatureShowcase.dto.RSAPrimes;
 import org.letgabr.RSADigitalSignatureShowcase.dto.ResponseRequestMessage;
 import org.letgabr.RSADigitalSignatureShowcase.service.ConnectionService;
 import org.letgabr.RSADigitalSignatureShowcase.service.CryptoSessionService;
 import org.letgabr.RSADigitalSignatureShowcase.util.PrimeTester;
-import org.letgabr.RSADigitalSignatureShowcase.util.RSACryptoSystem;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
@@ -19,9 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.math.BigInteger;
-import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -72,7 +67,7 @@ public class CryptoController
         return new ResponseEntity<>(cryptoSessionService.getKeysOfConnected(httpServletRequest), HttpStatus.OK);
     }
     @PostMapping("/encrypt")
-    public ResponseEntity<ResponseRequestMessage> encrypt(@RequestBody MessageWithKeys messageForEncrypt) {
+    public ResponseEntity<ResponseRequestMessage> encrypt(@RequestBody UserMessage messageForEncrypt) {
         return new ResponseEntity<>(cryptoSessionService.encrypt(messageForEncrypt.getResponseRequestMessage(), messageForEncrypt.getRsaKeys()), HttpStatus.OK);
     }
     @PostMapping("/decipher")
@@ -80,8 +75,8 @@ public class CryptoController
         return new ResponseEntity<>(cryptoSessionService.decipherBySessionKey(responseRequestMessage, httpServletRequest), HttpStatus.OK);
     }
     @PostMapping("/decipher-by-keys")
-    public ResponseEntity<ResponseRequestMessage> decipherByKeys(@RequestBody MessageWithKeys messageWithKeys) {
-        return new ResponseEntity<>(cryptoSessionService.decipherByKeys(messageWithKeys.getResponseRequestMessage(), messageWithKeys.getRsaKeys()), HttpStatus.OK);
+    public ResponseEntity<ResponseRequestMessage> decipherByKeys(@RequestBody UserMessage userMessage) {
+        return new ResponseEntity<>(cryptoSessionService.decipherByKeys(userMessage.getResponseRequestMessage(), userMessage.getRsaKeys()), HttpStatus.OK);
     }
     @PostMapping("/hash")
     public ResponseEntity<ResponseRequestMessage> getHash(@RequestBody ResponseRequestMessage responseRequestMessage) {

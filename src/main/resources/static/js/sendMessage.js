@@ -4,21 +4,21 @@ export default async function sendMessage(sessionId, stompClient) {
     let inputArea = document.querySelector('.inputmessagearea');
     let messageWindow = document.querySelector('.messagewindow');
     let sign = document.querySelector('#signInput');
-    let hash;
+    let hash = document.querySelector('#hashInput');
 
-    let url = `${window.location.origin}/hash`;
-    let response = await fetch(url, {
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-        method: 'POST',
-        body: JSON.stringify({ text: getEncryptedText() })
-    });
-    if (response.status == 200) {
-        hash = (await response.json()).text;
-    } else {
-        console.log(`failed to get hash`);
-    }
+    // let url = `${window.location.origin}/hash`;
+    // let response = await fetch(url, {
+    //     headers: {
+    //         'Content-Type': 'application/json;charset=utf-8'
+    //     },
+    //     method: 'POST',
+    //     body: JSON.stringify({ text: getEncryptedText() })
+    // });
+    // if (response.status == 200) {
+    //     hash = (await response.json()).text;
+    // } else {
+    //     console.log(`failed to get hash`);
+    // }
 
     messageWindow.insertAdjacentHTML('beforeend', 
     `
@@ -33,7 +33,7 @@ export default async function sendMessage(sessionId, stompClient) {
                         </div>
                         <div class="content-pairs">
                             <p class="lab">Хэш сообщения:</p>
-                            <p class="scroll">${hash}</p>
+                            <p class="scroll">${hash.value}</p>
                         </div>
                         <div class="content-pairs">
                             <p class="lab">Текст сообщения:</p>
@@ -52,7 +52,8 @@ export default async function sendMessage(sessionId, stompClient) {
     let message = {
         id: sessionId,
         text: inputArea.value,
-        sign: sign.value
+        sign: sign.value,
+        hash: hash.value
     };
     stompClient.publish({
         destination: getCurrentMessageTopic(),

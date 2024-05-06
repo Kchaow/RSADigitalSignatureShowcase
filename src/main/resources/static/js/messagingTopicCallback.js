@@ -4,6 +4,7 @@ export default async function messagingTopicCallback(message) {
     let messageId = getRandomInt(1, 100000);
     let messageWindow = document.querySelector('.messagewindow');
     let messageBody = JSON.parse(message.body);
+    console.log(messageBody);
     let sessionId = getJsessionId();
     if (messageBody.id != sessionId) {
         messageWindow.insertAdjacentHTML('beforeend', 
@@ -23,7 +24,7 @@ export default async function messagingTopicCallback(message) {
                                     </div>
                                     <div class="content-pairs">
                                         <p class="lab">Хэш сообщения:</p>
-                                        <p class="scroll" id="message-hash-${messageId}"></p>
+                                        <p class="scroll" id="message-hash-${messageId}">${messageBody.hash}</p>
                                     </div>
                                     <div class="content-pairs">
                                         <p class="lab">Текст сообщения:</p>
@@ -72,7 +73,7 @@ async function decipher(messageId) {
 
 async function veryficateSign(messageId) {
     await signCheck(messageId);
-    await getMessageHash(messageId);
+    // await getMessageHash(messageId);
 
     let verificationStatus = document.querySelector(`#sign-verification-status-${messageId}`);
     if (document.querySelector(`#message-hash-${messageId}`).textContent 

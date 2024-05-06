@@ -10,6 +10,7 @@ import encrypt from "./encrypt.js";
 import messagingTopicCallback from "./messagingTopicCallback.js";
 import initiateDisconnect from "./initiateDisconnect.js";
 import disconnectCallback from "./disconnectCallback.js";
+import makeHash from "./makeHash.js";
 
 window.onload = async function () {
         let sessionId = getJsessionId();
@@ -74,7 +75,10 @@ window.onload = async function () {
         encryptButton.addEventListener('click', encrypt);
 
         let disconnectButton = document.querySelector('[name=KillConnection]');
-        disconnectButton.addEventListener('click', initiateDisconnect)
+        disconnectButton.addEventListener('click', initiateDisconnect);
+
+        let hashButton = document.querySelector('[name=hash]');
+        hashButton.addEventListener('click', makeHash);
 
         if (document.querySelector('#userStatus').value != 'generated') {
             sendConnectionRequestButton.disabled = true;
